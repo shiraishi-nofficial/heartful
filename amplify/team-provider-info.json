@@ -1,0 +1,38 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-heartful-dev-9c8a7-authRole",
+      "UnauthRoleArn": "arn:aws:iam::934756469130:role/amplify-heartful-dev-9c8a7-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::934756469130:role/amplify-heartful-dev-9c8a7-authRole",
+      "Region": "ap-northeast-1",
+      "DeploymentBucketName": "amplify-heartful-dev-9c8a7-deployment",
+      "UnauthRoleName": "amplify-heartful-dev-9c8a7-unauthRole",
+      "StackName": "amplify-heartful-dev-9c8a7",
+      "StackId": "arn:aws:cloudformation:ap-northeast-1:934756469130:stack/amplify-heartful-dev-9c8a7/5dbccdd0-1974-11ef-938e-06ff8a322aad",
+      "AmplifyAppId": "d316qfukj0xrv7"
+    },
+    "categories": {
+      "auth": {
+        "heartful989bdff7989bdff7": {}
+      },
+      "api": {
+        "heartfulGql": {},
+        "heartfulAgoraApi": {}
+      },
+      "function": {
+        "createHeartfulLive": {
+          "deploymentBucketName": "amplify-heartful-dev-9c8a7-deployment",
+          "s3Key": "amplify-builds/createHeartfulLive-5539325832334a4f5a46-build.zip"
+        },
+        "createHeartfulAgoraToken": {
+          "secretsPathAmplifyAppId": "d316qfukj0xrv7",
+          "deploymentBucketName": "amplify-heartful-dev-9c8a7-deployment",
+          "s3Key": "amplify-builds/createHeartfulAgoraToken-3359764f714e58375651-build.zip"
+        }
+      },
+      "storage": {
+        "s3439abdb3": {}
+      }
+    }
+  }
+}
