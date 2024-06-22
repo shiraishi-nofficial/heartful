@@ -1,6 +1,5 @@
-import { Button, HStack, VStack } from "@chakra-ui/react";
+import { Avatar, Button, HStack, Heading, VStack } from "@chakra-ui/react";
 import ImageForm from "../img/ImageForm";
-import ImageDisplay from "../img/ImageDisplay";
 import { useState } from "react";
 
 const IconSetting = ({username, defaultIconUrl, handleIconChange}) => {
@@ -10,11 +9,12 @@ const IconSetting = ({username, defaultIconUrl, handleIconChange}) => {
 
     return(
         <VStack>
-            <VStack>
-                <ImageDisplay fileURL={fileURL} ratio={1} w={{base: 'full', sm: '50%'}} />
+            <VStack spacing={1} border={'solid'} px={20} py={3}>
+                <Heading size={'lg'}>あなたのアイコン</Heading>
+                <Avatar src={fileURL} size={'2xl'} />
                 <HStack>
                     <ImageForm name={'icon'} imageName={'icon/'+username} setImageFile={setIconFile} setFileURL={setFileURL} btnSize={'sm'} setIconName={setIconName} />
-                    <Button size={'sm'} isDisabled={fileURL===defaultIconUrl} onClick={()=>handleIconChange({iconName, iconImage: iconFile})}>送信</Button>
+                    <Button size={'sm'} isDisabled={fileURL===defaultIconUrl} onClick={()=>handleIconChange({iconName, iconImage: iconFile})}>アイコン確定</Button>
                 </HStack>
             </VStack>
         </VStack>

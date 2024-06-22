@@ -130,7 +130,6 @@ export const createChatLog = /* GraphQL */ `
       id
       role
       liveId
-      duration
       type
       kind
       content
@@ -150,7 +149,6 @@ export const updateChatLog = /* GraphQL */ `
       id
       role
       liveId
-      duration
       type
       kind
       content
@@ -170,7 +168,6 @@ export const deleteChatLog = /* GraphQL */ `
       id
       role
       liveId
-      duration
       type
       kind
       content

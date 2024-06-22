@@ -1,17 +1,21 @@
 import { Heading, useToast } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import VideoScreen from "../component/VideoScreen";
 import useLiveProfile from "../hook/aws/useLiveProfile";
 import ChatIndex from '../component/ChatIndex'
 import { useState } from "react";
+import useChatLogList from "../hook/aws/useChatLogList";
+import VideoIndex from "../component/VideoIndex";
+import AudioIndex from "../component/AudioIndex";
 
-const URANAI_MODE = 'chat';
+const URANAI_MODE = 'video';
+const UID = 11111;
+const IS_PERFORMER = true;
 
 const Broadcast = () => {
     const [hasStarted, setHasStarted] = useState(false);
     const { liveId, passCode } = useParams();
     const {liveProfile, isReady, passCodeError, updateIcon} = useLiveProfile({liveId, passCode: Number(passCode)})
-    const uid = 99987;
+    const {isReady: isChatLogListReady, ...chatHook} = useChatLogList({liveId, isSub: true});
     const toast = useToast();
 
     const handleIconChange = async({iconName, iconImage}) => {
@@ -23,14 +27,14 @@ const Broadcast = () => {
         }
     };
     
-    return isReady
+    return (isReady&&isChatLogListReady)
         ?!passCodeError
             ?URANAI_MODE==='chat'
-                ?<ChatIndex liveProfile={liveProfile} handleIconChange={handleIconChange} hasStarted={hasStarted} setHasStarted={setHasStarted} />
+                ?<ChatIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} handleIconChange={handleIconChange} hasStarted={hasStarted} setHasStarted={setHasStarted} />
                 :URANAI_MODE==='audio'
-                    ?<Heading>オーディオ</Heading>
+                    ?<AudioIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} handleIconChange={handleIconChange} hasStarted={hasStarted} setHasStarted={setHasStarted} />
                     :URANAI_MODE==='video'
-                        ?<VideoScreen liveId={liveId} uid={uid} />
+                        ?<VideoIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} handleIconChange={handleIconChange} hasStarted={hasStarted} setHasStarted={setHasStarted} />
                         :<Heading>何にもなし</Heading>
             :<Heading>パスコード間違え</Heading>
         :<Heading>読み込み中</Heading>

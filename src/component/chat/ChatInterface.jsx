@@ -1,32 +1,57 @@
-import { useState } from 'react';
-import { Box, Flex, Button, VStack, Center, Text, Textarea, HStack } from '@chakra-ui/react';
+import { useEffect, useRef, useState } from 'react';
+import { Box, Flex, Button, VStack, Center, Text, Textarea, HStack, useToast } from '@chakra-ui/react';
 import ChatMessage from './ChatMessage';
+import useAgoraRtm from '../../hook/agora/useAgoraRtm';
 
-const ChatInterface = () => {
-  const [messages, setMessages] = useState(initialChat);
+const CHAT_MAX_LENGTH = 400;
+
+const ChatInterface = ({liveProfile, chatHook, isPerformer, performerIconUrl}) => {
+  const role = isPerformer?'performer':'audience';
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  const messagesEndRef = useRef(null);
+  const toast = useToast();
+  const {isTheyOnline} = useAgoraRtm({liveId: liveProfile.id, role});
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async() => {
+    if(inputValue.length===0){
+      toast({ title: '文字数オーバー', description: `最大文字数は${CHAT_MAX_LENGTH}文字です。`, status: 'error', duration: 9000, isClosable: true});
+      return;
+    }
     if (inputValue.trim() !== '') {
+      await chatHook.postChat({role, content: inputValue, kind: 'text'});
       setMessages([...messages, { text: inputValue, own: true }]);
       setInputValue('');
     }
   };
 
+  const isOwnChatLog = (targetRole) => {
+    if(isPerformer){
+      return targetRole === 'performer';
+    }else{
+      return targetRole === 'audience';
+    }
+  };
+
+  // メッセージ送信後にスクロールをトリガー
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatHook.chatLogList, messages]); // chatLogListとmessagesが更新されたときにスクロール
+
   return (
     <VStack w={'full'}>
         <Flex direction="column" h="100vh" px={4} maxW={'1000px'}>
-            <Box bg={'#467c9e'} py={3}>
-                <Center><Text size={'lg'} fontWeight={'bold'} color={'white'}>残り5分10秒</Text></Center>
-            </Box>
             <Box flex="1" overflowY="auto">
-                {messages.map((message, index) => (
-                <ChatMessage
-                    key={index}
-                    message={message.text}
-                    isOwnMessage={message.own}
-                />
+                {chatHook.chatLogList.map(chatLog => (
+                  <ChatMessage
+                      key={chatLog.id}
+                      message={chatLog.content}
+                      isOwnMessage={isOwnChatLog(chatLog.role)}
+                      isTheyOnline={isTheyOnline}
+                      iconUrl={chatLog.role==='performer'&&performerIconUrl}
+                  />
                 ))}
+                <div ref={messagesEndRef} /> {/* スクロール位置の参照ポイント */}
             </Box>
             <HStack p={4}>
                 <Textarea
@@ -36,7 +61,10 @@ const ChatInterface = () => {
                 mr={2}
                 focusBorderColor='#467c9e'
                 />
-                <Button onClick={handleSendMessage} colorScheme="blue" bg={'#467c9e'}>送信</Button>
+                <VStack spacing={0} justify={'end'} h={'full'}>
+                  <Button isDisabled={inputValue.length<=0||CHAT_MAX_LENGTH<inputValue.length} onClick={handleSendMessage} colorScheme="blue" bg={'#467c9e'}>送信</Button>
+                  <Text fontSize={'xs'} color={CHAT_MAX_LENGTH<inputValue.length&&'red'}>{inputValue.length}/{CHAT_MAX_LENGTH}</Text>
+                </VStack>
             </HStack>
         </Flex>
     </VStack>
@@ -44,11 +72,3 @@ const ChatInterface = () => {
 };
 
 export default ChatInterface
-
-const initialChat = [
-    { text: 'こんにちは！お元気ですか？', own: false },
-    { text: 'こんにちは！元気です。あなたは？', own: true },
-    { text: '私も元気です。今日は何をしていましたか？', own: false },
-    { text: '今日は仕事をしていました。あなたは？', own: true },
-    { text: '私は家でリラックスしていました。', own: false },
-];

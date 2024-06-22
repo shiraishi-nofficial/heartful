@@ -2,7 +2,7 @@
 import { Button, Input, VStack } from "@chakra-ui/react";
 import { useRef } from "react";
 
-const ImageForm = ({setImageFile, setFileURL, setIconName, imageName}) => {
+const ImageForm = ({setImageFile, setFileURL, setIconName, imageName, btnSize}) => {
     const inputRef = useRef(null);
 
     const fileUpload = () => {
@@ -23,7 +23,7 @@ const ImageForm = ({setImageFile, setFileURL, setIconName, imageName}) => {
     }
     return(
     <VStack>
-        <Button colorScheme={'linkedin'} onClick={fileUpload} size={'sm'}>アイコン変更</Button>
+        <Button colorScheme={'linkedin'} onClick={fileUpload} size={btnSize}>アイコン変更</Button>
         <Input id='image' ref={inputRef} type="file" hidden accept="image/*,.png,.jpg,.jpeg" variant='unstyled' onChange={(e) => recieveImageFile(e)} />
     </VStack>
     )

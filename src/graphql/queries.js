@@ -92,7 +92,6 @@ export const getChatLog = /* GraphQL */ `
       id
       role
       liveId
-      duration
       type
       kind
       content
@@ -114,7 +113,6 @@ export const listChatLogs = /* GraphQL */ `
         id
         role
         liveId
-        duration
         type
         kind
         content
@@ -149,7 +147,6 @@ export const chatLogsByLive = /* GraphQL */ `
         id
         role
         liveId
-        duration
         type
         kind
         content
