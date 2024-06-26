@@ -22,7 +22,7 @@
       "function": {
         "createHeartfulLive": {
           "deploymentBucketName": "amplify-heartful-dev-9c8a7-deployment",
-          "s3Key": "amplify-builds/createHeartfulLive-5539325832334a4f5a46-build.zip"
+          "s3Key": "amplify-builds/createHeartfulLive-72315079504a33394c2f-build.zip"
         },
         "createHeartfulAgoraToken": {
           "secretsPathAmplifyAppId": "d316qfukj0xrv7",

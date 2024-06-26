@@ -1,17 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import { Box, Flex, Button, VStack, Center, Text, Textarea, HStack, useToast } from '@chakra-ui/react';
+import { Box, Flex, Button, VStack, Text, Textarea, HStack, useToast } from '@chakra-ui/react';
 import ChatMessage from './ChatMessage';
-import useAgoraRtm from '../../hook/agora/useAgoraRtm';
 
 const CHAT_MAX_LENGTH = 400;
 
-const ChatInterface = ({liveProfile, chatHook, isPerformer, performerIconUrl}) => {
+const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline}) => {
   const role = isPerformer?'performer':'audience';
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef(null);
   const toast = useToast();
-  const {isTheyOnline} = useAgoraRtm({liveId: liveProfile.id, role});
 
   const handleSendMessage = async() => {
     if(inputValue.length===0){

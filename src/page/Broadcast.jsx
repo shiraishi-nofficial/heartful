@@ -1,11 +1,15 @@
-import { Heading, useToast } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
+import { Box, Center, Heading, Text, VStack } from "@chakra-ui/react";
+import { useLocation, useParams } from "react-router-dom";
 import useLiveProfile from "../hook/aws/useLiveProfile";
 import ChatIndex from '../component/ChatIndex'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useChatLogList from "../hook/aws/useChatLogList";
 import VideoIndex from "../component/VideoIndex";
 import AudioIndex from "../component/AudioIndex";
+import useLiveSessionDuration from "../hook/aws/useLiveSessionDuration";
+import useAgoraRtm from "../hook/agora/useAgoraRtm";
+import CountDownTimer from "../component/CountDownTimer";
+import reload from "../function/reload";
 
 const URANAI_MODE = 'video';
 const UID = 11111;
@@ -13,30 +17,35 @@ const IS_PERFORMER = true;
 
 const Broadcast = () => {
     const [hasStarted, setHasStarted] = useState(false);
-    const { liveId, passCode } = useParams();
-    const {liveProfile, isReady, passCodeError, updateIcon} = useLiveProfile({liveId, passCode: Number(passCode)})
+    const { liveId } = useParams();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const pwd = searchParams.get('pwd');
+    const {liveProfile, isReady, passCodeError} = useLiveProfile({liveId, passCode: pwd, isPerformer: IS_PERFORMER});
     const {isReady: isChatLogListReady, ...chatHook} = useChatLogList({liveId, isSub: true});
-    const toast = useToast();
+    const {isTheyOnline} = useAgoraRtm({liveId: liveProfile?.id, role: IS_PERFORMER?'performer':'audience', isActive: hasStarted});
+    const {leftSeconds} = useLiveSessionDuration({liveId, liveDuration: liveProfile?.duration, isTheyOnline, isActive: IS_PERFORMER});
 
-    const handleIconChange = async({iconName, iconImage}) => {
-        try{
-            await updateIcon({iconName, iconImage});
-            toast({ title: 'アイコン設定完了', description: "正常に更新されました", status: 'success', duration: 9000, isClosable: true});
-        }catch(e){
-            toast({ title: 'アイコン設定失敗', description: "正常に更新されませんでした", status: 'error', duration: 9000, isClosable: true});
-        }
-    };
+    useEffect(()=>{
+        // 画面を離れたら更新
+        return ()=>reload(1000);
+    }, []);
     
     return (isReady&&isChatLogListReady)
         ?!passCodeError
-            ?URANAI_MODE==='chat'
-                ?<ChatIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} handleIconChange={handleIconChange} hasStarted={hasStarted} setHasStarted={setHasStarted} />
-                :URANAI_MODE==='audio'
-                    ?<AudioIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} handleIconChange={handleIconChange} hasStarted={hasStarted} setHasStarted={setHasStarted} />
-                    :URANAI_MODE==='video'
-                        ?<VideoIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} handleIconChange={handleIconChange} hasStarted={hasStarted} setHasStarted={setHasStarted} />
-                        :<Heading>何にもなし</Heading>
-            :<Heading>パスコード間違え</Heading>
+            ?(
+                <VStack w={'full'}>
+                    <CountDownTimer leftSeconds={leftSeconds} />
+                    {liveProfile.kind==='chat'
+                        ?<ChatIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} hasStarted={hasStarted} setHasStarted={setHasStarted} isTheyOnline={isTheyOnline} />
+                        :liveProfile.kind==='audio'
+                            ?<AudioIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} hasStarted={hasStarted} setHasStarted={setHasStarted} isTheyOnline={isTheyOnline} />
+                            :liveProfile.kind==='video'
+                                ?<VideoIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} hasStarted={hasStarted} setHasStarted={setHasStarted} isTheyOnline={isTheyOnline} />
+                                :<Heading>何にもなし</Heading>}
+                </VStack>
+            )
+            :<Heading>パスコードエラー</Heading>
         :<Heading>読み込み中</Heading>
 };
 

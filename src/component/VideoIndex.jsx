@@ -1,4 +1,4 @@
-import { AspectRatio, Box, Button, ButtonGroup, Center, Heading, Progress, VStack, useBoolean } from "@chakra-ui/react";
+import { AspectRatio, Box, Button, ButtonGroup, Center, Heading, Progress, Text, VStack, useBoolean } from "@chakra-ui/react";
 import IconSetting from "./performer/IconSetting";
 import useAgoraChannel from "../hook/agora/useAgoraChannel";
 import useAgoraPublisher from "../hook/agora/useAgoraPublisher";
@@ -10,11 +10,16 @@ import { IoChatboxEllipses } from "react-icons/io5";
 import ChatInterface from "./chat/ChatInterface";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { useState } from "react";
+import ScreenShareBox from "./ScreenShareBox";
+import WatchScreenShareBox from "./WatchScreenShareBox";
+import { MdScreenShare } from "react-icons/md";
 
-const VideoIndex = ({liveProfile, uid, chatHook, isPerformer, hasStarted, handleIconChange, setHasStarted}) => {
+const VideoIndex = ({liveProfile, uid, chatHook, isPerformer, hasStarted, setHasStarted, isTheyOnline}) => {
     const [isVideoModeShowed, setIsVideoModeShowed] = useBoolean(false);
     const [hasCommentShowed, setHasCommentShowed] = useBoolean(false);
     const [isCommentShowed, setIsCommentShowed] = useBoolean(false);
+    const [isScreenShareShowed, setIsScreenShareShowed] = useBoolean(false);
+    const useScreenShareState = useBoolean(false);
     const [videoMode, setVideoMode] = useState(31);
     const {client, hasJoined, remoteUserList, screenVideoTrack, isPoorNetworkQuality} = useAgoraChannel({uid, cname: liveProfile?.id});
     const {hasPublished, localVideoTrack, localAudioTrack, volume, isEnabled, isBlurred, publishAgora, toggleVideoOff, toggleAudioOff, toggleBackgroundBlurring} = useAgoraPublisher({client});
@@ -31,7 +36,11 @@ const VideoIndex = ({liveProfile, uid, chatHook, isPerformer, hasStarted, handle
     };
 
     const hasStartedFuncList = [
-        {name: 'コメント', icon: IoChatboxEllipses, isOpen: isCommentShowed, onClick: handleShowComment},
+        {name: 'チャット', icon: IoChatboxEllipses, isOpen: isCommentShowed, onClick: handleShowComment},
+    ];
+
+    const performerFuncBoxList = [
+        {name: '画面共有', icon: MdScreenShare, isOpen: isScreenShareShowed, onClick: ()=>{setIsScreenShareShowed.toggle()}},
     ];
 
     const funcBoxList = [
@@ -41,13 +50,18 @@ const VideoIndex = ({liveProfile, uid, chatHook, isPerformer, hasStarted, handle
         ...(hasStarted
             ?hasStartedFuncList
             :[]),
+         ...(isPerformer
+            ?performerFuncBoxList
+            :[]),
     ].filter(Boolean);
 
     return hasPublished
         ?<Box w={'full'} pos={'relative'}>
             {hasCommentShowed&&<Box display={!isCommentShowed&&'none'} pos={'absolute'} left={0} w={'full'} h={'full'} bg={'rgba(0, 0, 0, 0.5)'} zIndex={999}>
-                <ChatInterface liveProfile={liveProfile} chatHook={chatHook} isPerformer={isPerformer} performerIconUrl={liveProfile.iconUrl} />
+                <ChatInterface chatHook={chatHook} isPerformer={isPerformer} performerIconUrl={liveProfile.iconUrl} isTheyOnline={isTheyOnline} />
             </Box>}
+            {isScreenShareShowed&&<ScreenShareBox useScreenShareState={useScreenShareState} screenVideoTrack={screenVideoTrack} liveId={liveProfile.id} onClose={setIsScreenShareShowed.off} />}
+            {screenVideoTrack&&<WatchScreenShareBox screenVideoTrack={screenVideoTrack} />}
             {isVideoModeShowed&&<VStack px={10} py={3} color={'white'} pos={'absolute'} top={50} bg={'black'} zIndex={999999}>
                 <Heading size={'md'}>ビデオモード変更</Heading>
                 <ButtonGroup size='xs' isAttached variant='outline'>
@@ -61,7 +75,7 @@ const VideoIndex = ({liveProfile, uid, chatHook, isPerformer, hasStarted, handle
         </Box>
         :<VStack spacing={3}>
             <Heading>ビデオ</Heading>
-            {isPerformer&&<IconSetting username={liveProfile.performerUsername} defaultIconUrl={liveProfile?.iconUrl} handleIconChange={handleIconChange} />}
+            {/* {isPerformer&&<IconSetting username={liveProfile.performerUsername} defaultIconUrl={liveProfile?.iconUrl} handleIconChange={handleIconChange} />} */}
             {localVideoTrack&&localAudioTrack&&<AspectRatio ratio={9/16} w={'full'} maxW={'sm'}><AgoraVideoPlayer videoTrack={localVideoTrack} style={{height: '100%', width: '100%'}} /></AspectRatio>}
             {localVideoTrack&&localAudioTrack&&<Progress colorScheme='green' size='sm' value={volume} w={'full'} maxW={'sm'} />}
             {hasJoined&&localVideoTrack&&localAudioTrack&&<Button mt={5} colorScheme="red" size={'lg'} variant={'outline'} onClick={handleStart}>開始</Button>}

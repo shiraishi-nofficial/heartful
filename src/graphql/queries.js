@@ -6,17 +6,12 @@ export const getLiveProfile = /* GraphQL */ `
     getLiveProfile(id: $id) {
       id
       performerUsername
-      performerUserProfile {
-        username
-        icon
-        createdAt
-        updatedAt
-        __typename
-      }
       starttime
       duration
       type
-      passCode
+      performerPassCode
+      audiencePassCode
+      kind
       isUnpublished
       createdAt
       updatedAt
@@ -37,46 +32,10 @@ export const listLiveProfiles = /* GraphQL */ `
         starttime
         duration
         type
-        passCode
+        performerPassCode
+        audiencePassCode
+        kind
         isUnpublished
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getUserProfile = /* GraphQL */ `
-  query GetUserProfile($username: String!) {
-    getUserProfile(username: $username) {
-      username
-      icon
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const listUserProfiles = /* GraphQL */ `
-  query ListUserProfiles(
-    $username: String
-    $filter: ModelUserProfileFilterInput
-    $limit: Int
-    $nextToken: String
-    $sortDirection: ModelSortDirection
-  ) {
-    listUserProfiles(
-      username: $username
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      sortDirection: $sortDirection
-    ) {
-      items {
-        username
-        icon
         createdAt
         updatedAt
         __typename
@@ -153,6 +112,44 @@ export const chatLogsByLive = /* GraphQL */ `
         createdAt
         updatedAt
         username
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getLiveSessionDuration = /* GraphQL */ `
+  query GetLiveSessionDuration($liveId: ID!) {
+    getLiveSessionDuration(liveId: $liveId) {
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listLiveSessionDurations = /* GraphQL */ `
+  query ListLiveSessionDurations(
+    $liveId: ID
+    $filter: ModelLiveSessionDurationFilterInput
+    $limit: Int
+    $nextToken: String
+    $sortDirection: ModelSortDirection
+  ) {
+    listLiveSessionDurations(
+      liveId: $liveId
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
+      items {
+        liveId
+        duration
+        createdAt
+        updatedAt
         __typename
       }
       nextToken

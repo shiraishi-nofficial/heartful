@@ -4,7 +4,7 @@ import generateAgoraToken from '../../function/generateAgoraToken';
 
 const useClient = createClient(import.meta.env.VITE_AGORA_WITH_TOKEN);
 
-const useAgoraRtm = ({liveId, role}) => {
+const useAgoraRtm = ({liveId, role, isActive}) => {
     const variables = { username: role, cname: liveId, role: "publisher", type: "rtm" };
     const [rtm, setRtm] = useState({});
     const [hasRequested, setHasRequested] = useState(false);
@@ -58,10 +58,10 @@ const useAgoraRtm = ({liveId, role}) => {
 
     // ログイン
     useEffect(()=>{
-      if(rtm?.channel&&role&&!hasRequested){
+      if(isActive&&rtm?.channel&&role&&!hasRequested){
         rtmLogin();
       }
-    }, [rtm?.channel, role]);
+    }, [rtm?.channel, role, isActive]);
 
     return {rtmUserIdList, isTheyOnline: rtmUserIdList.length>1};
 }

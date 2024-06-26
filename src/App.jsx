@@ -5,8 +5,8 @@ import Watch from './page/Watch';
 const App = () => {
   return (
     <Routes>
-      <Route path="/broadcast/:liveId/:passCode" element={<Broadcast />} />
-      <Route path="/watch/:liveId/:passCode" element={<Watch />} />
+      <Route path="/broadcast/:liveId" element={<Broadcast />} />
+      <Route path="/watch/:liveId" element={<Watch />} />
     </Routes>
   );
 };

@@ -12,17 +12,12 @@ export const onCreateLiveProfile = /* GraphQL */ `
     ) {
       id
       performerUsername
-      performerUserProfile {
-        username
-        icon
-        createdAt
-        updatedAt
-        __typename
-      }
       starttime
       duration
       type
-      passCode
+      performerPassCode
+      audiencePassCode
+      kind
       isUnpublished
       createdAt
       updatedAt
@@ -41,17 +36,12 @@ export const onUpdateLiveProfile = /* GraphQL */ `
     ) {
       id
       performerUsername
-      performerUserProfile {
-        username
-        icon
-        createdAt
-        updatedAt
-        __typename
-      }
       starttime
       duration
       type
-      passCode
+      performerPassCode
+      audiencePassCode
+      kind
       isUnpublished
       createdAt
       updatedAt
@@ -70,60 +60,13 @@ export const onDeleteLiveProfile = /* GraphQL */ `
     ) {
       id
       performerUsername
-      performerUserProfile {
-        username
-        icon
-        createdAt
-        updatedAt
-        __typename
-      }
       starttime
       duration
       type
-      passCode
+      performerPassCode
+      audiencePassCode
+      kind
       isUnpublished
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onCreateUserProfile = /* GraphQL */ `
-  subscription OnCreateUserProfile(
-    $filter: ModelSubscriptionUserProfileFilterInput
-    $username: String
-  ) {
-    onCreateUserProfile(filter: $filter, username: $username) {
-      username
-      icon
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onUpdateUserProfile = /* GraphQL */ `
-  subscription OnUpdateUserProfile(
-    $filter: ModelSubscriptionUserProfileFilterInput
-    $username: String
-  ) {
-    onUpdateUserProfile(filter: $filter, username: $username) {
-      username
-      icon
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const onDeleteUserProfile = /* GraphQL */ `
-  subscription OnDeleteUserProfile(
-    $filter: ModelSubscriptionUserProfileFilterInput
-    $username: String
-  ) {
-    onDeleteUserProfile(filter: $filter, username: $username) {
-      username
-      icon
       createdAt
       updatedAt
       __typename
@@ -183,6 +126,45 @@ export const onDeleteChatLog = /* GraphQL */ `
       createdAt
       updatedAt
       username
+      __typename
+    }
+  }
+`;
+export const onCreateLiveSessionDuration = /* GraphQL */ `
+  subscription OnCreateLiveSessionDuration(
+    $filter: ModelSubscriptionLiveSessionDurationFilterInput
+  ) {
+    onCreateLiveSessionDuration(filter: $filter) {
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateLiveSessionDuration = /* GraphQL */ `
+  subscription OnUpdateLiveSessionDuration(
+    $filter: ModelSubscriptionLiveSessionDurationFilterInput
+  ) {
+    onUpdateLiveSessionDuration(filter: $filter) {
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteLiveSessionDuration = /* GraphQL */ `
+  subscription OnDeleteLiveSessionDuration(
+    $filter: ModelSubscriptionLiveSessionDurationFilterInput
+  ) {
+    onDeleteLiveSessionDuration(filter: $filter) {
+      liveId
+      duration
+      createdAt
+      updatedAt
       __typename
     }
   }

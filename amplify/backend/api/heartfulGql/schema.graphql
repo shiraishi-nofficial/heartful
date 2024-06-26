@@ -12,32 +12,15 @@ type LiveProfile
       { allow: public, provider: iam, operations: [create, read, update] }
     ]
   ) {
-  id: ID
+  id: ID!
   performerUsername: String!
-  performerUserProfile: UserProfile @hasOne(fields: ["performerUsername"])
   starttime: Int!
   duration: Int!
-  type: String! # liveが入る
-  passCode: Int!
+  type: String! # live only
+  performerPassCode: Int!  # 6桁
+  audiencePassCode: Int!  # 6桁
+  kind: String!  # chat, audio, video
   isUnpublished: Boolean!
-}
-
-type UserProfile
-  @model
-  @auth(
-    rules: [
-      {
-        allow: owner
-        ownerField: "username"
-        provider: userPools
-        operations: [read, create, update]
-      }
-      { allow: private, provider: userPools, operations: [create, read, update] }
-      { allow: public, provider: iam, operations: [create, read, update] }
-    ]
-  ) {
-  username: String! @primaryKey
-  icon: String
 }
 
 type ChatLog
@@ -60,5 +43,18 @@ type ChatLog
   type: String!  # chatが入る
   kind: String!  #'text' or 'image'
   content: String!
+  createdAt: AWSDateTime
+}
+
+type LiveSessionDuration
+  @model
+  @auth(
+    rules: [
+      { allow: private, provider: userPools, operations: [create, read, update] }
+      { allow: public, provider: iam, operations: [create, read, update] }
+    ]
+  ) {
+  liveId: ID! @primaryKey
+  duration: Int!
   createdAt: AWSDateTime
 }

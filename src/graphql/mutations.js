@@ -9,17 +9,12 @@ export const createLiveProfile = /* GraphQL */ `
     createLiveProfile(input: $input, condition: $condition) {
       id
       performerUsername
-      performerUserProfile {
-        username
-        icon
-        createdAt
-        updatedAt
-        __typename
-      }
       starttime
       duration
       type
-      passCode
+      performerPassCode
+      audiencePassCode
+      kind
       isUnpublished
       createdAt
       updatedAt
@@ -35,17 +30,12 @@ export const updateLiveProfile = /* GraphQL */ `
     updateLiveProfile(input: $input, condition: $condition) {
       id
       performerUsername
-      performerUserProfile {
-        username
-        icon
-        createdAt
-        updatedAt
-        __typename
-      }
       starttime
       duration
       type
-      passCode
+      performerPassCode
+      audiencePassCode
+      kind
       isUnpublished
       createdAt
       updatedAt
@@ -61,60 +51,13 @@ export const deleteLiveProfile = /* GraphQL */ `
     deleteLiveProfile(input: $input, condition: $condition) {
       id
       performerUsername
-      performerUserProfile {
-        username
-        icon
-        createdAt
-        updatedAt
-        __typename
-      }
       starttime
       duration
       type
-      passCode
+      performerPassCode
+      audiencePassCode
+      kind
       isUnpublished
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const createUserProfile = /* GraphQL */ `
-  mutation CreateUserProfile(
-    $input: CreateUserProfileInput!
-    $condition: ModelUserProfileConditionInput
-  ) {
-    createUserProfile(input: $input, condition: $condition) {
-      username
-      icon
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const updateUserProfile = /* GraphQL */ `
-  mutation UpdateUserProfile(
-    $input: UpdateUserProfileInput!
-    $condition: ModelUserProfileConditionInput
-  ) {
-    updateUserProfile(input: $input, condition: $condition) {
-      username
-      icon
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const deleteUserProfile = /* GraphQL */ `
-  mutation DeleteUserProfile(
-    $input: DeleteUserProfileInput!
-    $condition: ModelUserProfileConditionInput
-  ) {
-    deleteUserProfile(input: $input, condition: $condition) {
-      username
-      icon
       createdAt
       updatedAt
       __typename
@@ -174,6 +117,48 @@ export const deleteChatLog = /* GraphQL */ `
       createdAt
       updatedAt
       username
+      __typename
+    }
+  }
+`;
+export const createLiveSessionDuration = /* GraphQL */ `
+  mutation CreateLiveSessionDuration(
+    $input: CreateLiveSessionDurationInput!
+    $condition: ModelLiveSessionDurationConditionInput
+  ) {
+    createLiveSessionDuration(input: $input, condition: $condition) {
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateLiveSessionDuration = /* GraphQL */ `
+  mutation UpdateLiveSessionDuration(
+    $input: UpdateLiveSessionDurationInput!
+    $condition: ModelLiveSessionDurationConditionInput
+  ) {
+    updateLiveSessionDuration(input: $input, condition: $condition) {
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteLiveSessionDuration = /* GraphQL */ `
+  mutation DeleteLiveSessionDuration(
+    $input: DeleteLiveSessionDurationInput!
+    $condition: ModelLiveSessionDurationConditionInput
+  ) {
+    deleteLiveSessionDuration(input: $input, condition: $condition) {
+      liveId
+      duration
+      createdAt
+      updatedAt
       __typename
     }
   }
