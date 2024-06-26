@@ -4,7 +4,9 @@ const CountDownTimer = ({leftSeconds}) => {
     return(
     <Box bg={'#467c9e'} py={3} w={'full'}>
         <Center>
-            <Text size={'lg'} fontWeight={'bold'} color={'white'}>{leftSeconds>0?`残り${leftSeconds}秒`:`${leftSeconds}秒延長`}</Text>
+            <Text size={'lg'} fontWeight={'bold'} color={'white'}>
+                {leftSeconds>0?`残り${leftSeconds>60?`${Math.floor(leftSeconds/60)}分`:`${Math.abs(leftSeconds)}秒`}`:`${leftSeconds}秒延長`}
+            </Text>
         </Center>
     </Box>
     )
