@@ -5,7 +5,7 @@ import FuncWidthBtn from "./FuncWidthBtn";
 
 const FancContainer = ({children, top=20, left=20, title, boxWidth, setBoxWidth, setCommentSize, opacity=.9, onClose}) => {
     return(
-        <Draggable handle=".handle">
+        <Draggable handle=".handle" bounds="body">
             <Box w={boxWidth+'px'} minH={'400px'} pos={'fixed'} pt={3} px={2} top={top} left={left} zIndex={1000} bg={'black'} opacity={opacity}>
                 <Box color={'white'}>
                     <HStack justify={'center'} className="handle" cursor={'grab'}>

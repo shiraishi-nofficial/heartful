@@ -1,13 +1,17 @@
-import { AspectRatio, Avatar, Box, HStack, VStack } from "@chakra-ui/react";
+import { AspectRatio, Avatar, Box, Heading, HStack, Text, VStack } from "@chakra-ui/react";
 import { AgoraVideoPlayer } from "agora-rtc-react";
 
-const VideoInterface = ({localVideoTrack, remoteUserList, videoMode}) => {
+const VideoInterface = ({localVideoTrack, remoteUserList, videoMode, newMsg}) => {
     
     return(
         <VStack w={'full'}>
-            <VStack direction="column" h="100vh" w={'full'} maxW={'1000px'}>
-                <VStack w={'full'} h={'full'} maxW={'sm'}>
+            <VStack direction="column" w={'full'} maxW={'1000px'}>
+                <VStack w={'full'} maxW={'xl'} pos={'relative'}>
                     <VideoLayout videoMode={videoMode} myVideoTrack={localVideoTrack} theirVideoTrack={remoteUserList[0]?.videoTrack} />
+                    {newMsg&&<Box pos={'absolute'} bottom={0} bgColor={'skyblue'} zIndex={'99999999999'} w={'xs'} px={3} py={2}>  
+                        <Heading size={'sm'}>新着メッセージ</Heading>
+                        <Text noOfLines={1}>{newMsg.kind==='img'?'新しい画像':newMsg.content}</Text>
+                    </Box>}
                 </VStack>
             </VStack>
         </VStack>
@@ -20,7 +24,7 @@ const VideoLayout = ({videoMode, myVideoTrack, theirVideoTrack}) => {
     switch(getFirstDigit(videoMode)){
         case 1:
             return(
-                <VStack h={'full'} w={'full'} justify={'center'}>
+                <VStack h={'full'} w={'80%'} justify={'center'} maxW={'xs'} spacing={0}>
                     <AspectRatio ratio={9/16} w={'full'}>
                         <VideoScreen videoTrack={videoMode%10===1?myVideoTrack:theirVideoTrack} />
                     </AspectRatio>
@@ -28,7 +32,7 @@ const VideoLayout = ({videoMode, myVideoTrack, theirVideoTrack}) => {
             );
         case 2:
             return(
-                <HStack w={'full'} h={'full'}>
+                <HStack w={'full'} h={'full'} spacing={0}>
                     <AspectRatio ratio={9/16} w={'50%'}>
                         <VideoScreen videoTrack={videoMode%10===1?myVideoTrack:theirVideoTrack} />
                     </AspectRatio>
@@ -39,7 +43,7 @@ const VideoLayout = ({videoMode, myVideoTrack, theirVideoTrack}) => {
             );
         case 3:
             return(
-                <VStack h={'full'} w={'full'} justify={'center'}>
+                <VStack h={'full'} w={'80%'} justify={'center'} maxW={'xs'} spacing={0}>
                     <AspectRatio ratio={9/16} w={'full'} pos={'relative'}>
                         <Box>
                             <AspectRatio ratio={9/16} w={'full'}>
@@ -54,7 +58,7 @@ const VideoLayout = ({videoMode, myVideoTrack, theirVideoTrack}) => {
             );
         case 4:
             return(
-                <VStack h={'full'} w={'full'} justify={'center'}>
+                <VStack h={'full'} w={'80%'} justify={'center'} maxW={'xs'} spacing={0}>
                     <AspectRatio ratio={9/16} w={'50%'}>
                         <VideoScreen videoTrack={videoMode%10===1?myVideoTrack:theirVideoTrack} />
                     </AspectRatio>

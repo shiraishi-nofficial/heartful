@@ -1,20 +1,30 @@
-import { AspectRatio, Box, Button, ButtonGroup, Center, Heading, Progress, Text, VStack, useBoolean } from "@chakra-ui/react";
-import IconSetting from "./performer/IconSetting";
+import { AspectRatio, Box, Button, Divider, HStack, Heading, Image, Img, Progress, SimpleGrid, Stack, Text, VStack, useBoolean } from "@chakra-ui/react";
 import useAgoraChannel from "../hook/agora/useAgoraChannel";
 import useAgoraPublisher from "../hook/agora/useAgoraPublisher";
 import { AgoraVideoPlayer } from "agora-rtc-react";
 import VideoInterface from "./video/VideoInterface";
-import { BsFillCameraVideoFill, BsFillCameraVideoOffFill, BsFillMicFill, BsFillMicMuteFill } from "react-icons/bs";
 import FuncBox from "./FuncBox";
-import { IoChatboxEllipses } from "react-icons/io5";
 import ChatInterface from "./chat/ChatInterface";
-import { LuLayoutDashboard } from "react-icons/lu";
 import { useState } from "react";
 import ScreenShareBox from "./ScreenShareBox";
 import WatchScreenShareBox from "./WatchScreenShareBox";
-import { MdScreenShare } from "react-icons/md";
+import StartBtn from "./StartBtn";
+import * as Images from '../image/index';
+import reload from "../function/reload";
+import { useNavigate } from "react-router-dom";
 
-const VideoIndex = ({liveProfile, uid, chatHook, isPerformer, hasStarted, setHasStarted, isTheyOnline}) => {
+const modeImgList = [
+    {mode: 11, img: Images.Mode1},
+    {mode: 12, img: Images.Mode2},
+    {mode: 21, img: Images.Mode3},
+    {mode: 22, img: Images.Mode4},
+    {mode: 31, img: Images.Mode5},
+    {mode: 32, img: Images.Mode6},
+    {mode: 41, img: Images.Mode7},
+    {mode: 42, img: Images.Mode8},
+];
+
+const VideoIndex = ({liveProfile, uid, newMsgList, chatHook, isPerformer, hasStarted, setHasStarted, isTheyOnline}) => {
     const [isVideoModeShowed, setIsVideoModeShowed] = useBoolean(false);
     const [hasCommentShowed, setHasCommentShowed] = useBoolean(false);
     const [isCommentShowed, setIsCommentShowed] = useBoolean(false);
@@ -24,6 +34,8 @@ const VideoIndex = ({liveProfile, uid, chatHook, isPerformer, hasStarted, setHas
     const {client, hasJoined, remoteUserList, screenVideoTrack, isPoorNetworkQuality} = useAgoraChannel({uid, cname: liveProfile?.id});
     const {hasPublished, localVideoTrack, localAudioTrack, volume, isEnabled, isBlurred, publishAgora, toggleVideoOff, toggleAudioOff, toggleBackgroundBlurring} = useAgoraPublisher({client});
     const gradientPercentage = Math.min(Math.max(volume, 0), 100);
+
+    const navitate = useNavigate();
 
     const handleStart = async() => {
         await publishAgora();
@@ -36,49 +48,66 @@ const VideoIndex = ({liveProfile, uid, chatHook, isPerformer, hasStarted, setHas
     };
 
     const hasStartedFuncList = [
-        {name: 'チャット', icon: IoChatboxEllipses, isOpen: isCommentShowed, onClick: handleShowComment},
+        {name: 'チャット', icon: Images.ChatImg, isOpen: isCommentShowed, onClick: handleShowComment},
     ];
 
     const performerFuncBoxList = [
-        {name: '画面共有', icon: MdScreenShare, isOpen: isScreenShareShowed, onClick: ()=>{setIsScreenShareShowed.toggle()}},
+        {name: '画面共有', icon: Images.ScreenShareImg, isOpen: isScreenShareShowed, onClick: ()=>{setIsScreenShareShowed.toggle()}},
     ];
 
     const funcBoxList = [
-        {name: 'マイク', icon: !localAudioTrack?.enabled?BsFillMicMuteFill:BsFillMicFill, isOpen: !localAudioTrack?.enabled, onClick: toggleAudioOff, coverBg: `linear-gradient(to right, green ${gradientPercentage}%, transparent ${gradientPercentage}%)`},
-        {name: 'カメラ', icon: !localVideoTrack?.enabled?BsFillCameraVideoOffFill:BsFillCameraVideoFill, isOpen: !localVideoTrack?.enabled, onClick: toggleVideoOff},
-        {name: 'モード', icon: LuLayoutDashboard, isOpen: isVideoModeShowed, onClick: ()=>setIsVideoModeShowed.toggle()},
+        {name: 'マイク', icon: !localAudioTrack?.enabled?Images.MicImgToumei:Images.MicImg, isOpen: !localAudioTrack?.enabled, onClick: toggleAudioOff, coverBg: `linear-gradient(to right, green ${gradientPercentage}%, transparent ${gradientPercentage}%)`},
+        {name: 'カメラ', icon: !localVideoTrack?.enabled?Images.CameraImgToumei:Images.CameraImg, isOpen: !localVideoTrack?.enabled, onClick: toggleVideoOff},
+        {name: 'モード', icon: Images.ModeImg, isOpen: isVideoModeShowed, onClick: ()=>setIsVideoModeShowed.toggle()},
         ...(hasStarted
             ?hasStartedFuncList
             :[]),
          ...(isPerformer
             ?performerFuncBoxList
             :[]),
+        {name: '保留', icon: Images.Horyu, onClick: reload},
+        {name: '退出', icon: Images.Leave, onClick: ()=>navitate('/ended')},
     ].filter(Boolean);
 
     return hasPublished
         ?<Box w={'full'} pos={'relative'}>
-            {hasCommentShowed&&<Box display={!isCommentShowed&&'none'} pos={'absolute'} left={0} w={'full'} h={'full'} bg={'rgba(0, 0, 0, 0.5)'} zIndex={999}>
+            {/* {hasCommentShowed&&<Box display={!isCommentShowed&&'none'} pos={'absolute'} left={0} w={'full'} h={'full'} bg={'rgba(0, 0, 0, 0.5)'} zIndex={999}>
                 <ChatInterface chatHook={chatHook} isPerformer={isPerformer} performerIconUrl={liveProfile.iconUrl} isTheyOnline={isTheyOnline} />
-            </Box>}
+            </Box>} */}
             {isScreenShareShowed&&<ScreenShareBox useScreenShareState={useScreenShareState} screenVideoTrack={screenVideoTrack} liveId={liveProfile.id} onClose={setIsScreenShareShowed.off} />}
             {screenVideoTrack&&<WatchScreenShareBox screenVideoTrack={screenVideoTrack} />}
-            {isVideoModeShowed&&<VStack px={10} py={3} color={'white'} pos={'absolute'} top={50} bg={'black'} zIndex={999999}>
-                <Heading size={'md'}>ビデオモード変更</Heading>
-                <ButtonGroup size='xs' isAttached variant='outline'>
-                    {[11, 12, 21, 22, 31, 32, 41, 42].map(key=><Button key={key} color={'white'} bg={videoMode===key&&'white'} onClick={()=>setVideoMode(key)}>{key}</Button>)}
-                </ButtonGroup>
+            {isVideoModeShowed&&<VStack px={10} py={3} color={'white'} pos={'absolute'} top={50} bg={'#321887'} zIndex={999999} rounded={'md'} borderColor={'white'} border={'1px'} opacity={.9}>
+                <VStack>
+                    <HStack>
+                        <Img src={Images.VideoIcon} />
+                        <Heading size={'md'} >ビデオモード変更</Heading>
+                    </HStack>
+                    <Divider borderColor="white" />
+                </VStack>
+                <SimpleGrid columns={4} gap={4}>
+                    {modeImgList.map(item=>(
+                        <VStack key={item.mode} boxSize={10}>
+                            <Image src={item.img} bg={videoMode===item.mode&&'skyblue'} onClick={()=>setVideoMode(item.mode)} cursor={'pointer'} />
+                        </VStack>
+                    ))}
+                </SimpleGrid>
             </VStack>}
-            <VideoInterface localVideoTrack={localVideoTrack} remoteUserList={remoteUserList} videoMode={videoMode} />
+            <Stack w={'full'} direction={{base: 'column', md: 'row'}} spacing={0}>
+                <VideoInterface localVideoTrack={localVideoTrack} remoteUserList={remoteUserList} videoMode={videoMode} newMsg={newMsgList.length>0&&!isCommentShowed&&newMsgList[0]} />
+                {hasCommentShowed&&<VStack w={'full'} pr={{base: 0, md: 28}} display={!isCommentShowed&&'none'}><ChatInterface chatHook={chatHook} isPerformer={isPerformer} performerIconUrl={liveProfile.iconUrl} isTheyOnline={isTheyOnline} /></VStack>}
+            </Stack>
             <VStack p={5} color={'white'} justify={'end'} pos={'fixed'} top={'0'} right={'0'} zIndex={9999} >
                 {funcBoxList.map((item, i)=><FuncBox key={i} {...item} />)}
             </VStack>
         </Box>
-        :<VStack spacing={3}>
-            <Heading>ビデオ</Heading>
+        :<VStack spacing={3} w={'full'}>
             {/* {isPerformer&&<IconSetting username={liveProfile.performerUsername} defaultIconUrl={liveProfile?.iconUrl} handleIconChange={handleIconChange} />} */}
-            {localVideoTrack&&localAudioTrack&&<AspectRatio ratio={9/16} w={'full'} maxW={'sm'}><AgoraVideoPlayer videoTrack={localVideoTrack} style={{height: '100%', width: '100%'}} /></AspectRatio>}
-            {localVideoTrack&&localAudioTrack&&<Progress colorScheme='green' size='sm' value={volume} w={'full'} maxW={'sm'} />}
-            {hasJoined&&localVideoTrack&&localAudioTrack&&<Button mt={5} colorScheme="red" size={'lg'} variant={'outline'} onClick={handleStart}>開始</Button>}
+            {localVideoTrack&&localAudioTrack&&<AspectRatio ratio={9/16} w={'60%'} maxW={'xs'}><AgoraVideoPlayer videoTrack={localVideoTrack} style={{height: '100%', width: '100%'}} /></AspectRatio>}
+            {localVideoTrack&&localAudioTrack&&<Progress colorScheme='green' size='sm' value={volume} w={'60%'} maxW={'xs'} />}
+            <HStack>
+                {hasJoined&&localVideoTrack&&localAudioTrack&&<StartBtn onClick={handleStart} />}
+                {localVideoTrack&&localAudioTrack&&<Button colorScheme={'purple'} onClick={toggleBackgroundBlurring}>背景ぼかし</Button>}
+            </HStack>
         </VStack>
 };
 

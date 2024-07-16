@@ -1,6 +1,7 @@
 import { createCameraVideoTrack, createMicrophoneAudioTrack } from "agora-rtc-react";
 import { useEffect, useState } from "react";
-// import VirtualBackgroundExtension from "agora-extension-virtual-background";
+import VirtualBackgroundExtension from "agora-extension-virtual-background";
+import { registerExtensions } from "agora-rtc-sdk-ng/esm";
 
 const useMicrophoneAudioTrack = createMicrophoneAudioTrack();
 const useCameraVideoTrack = createCameraVideoTrack();
@@ -11,6 +12,12 @@ const useAgoraPublisher = ({client}) => {
     const [isEnabled, setIsEnabled] = useState({video: true, audio: true});
     const {track: localAudioTrack, ready: micReady} = useMicrophoneAudioTrack();
     const {track: localVideoTrack, ready: cameraReady} = useCameraVideoTrack();
+    const [processor, setProcessor] = useState(null);
+    const [isBlurred, setIsBlurred] = useState(false);
+
+    // 背景関連
+    const extension = new VirtualBackgroundExtension();
+    registerExtensions([extension]);
 
     const publishAgora = async() => {
         try{
@@ -38,6 +45,20 @@ const useAgoraPublisher = ({client}) => {
         setIsEnabled(prev=>({...prev, audio: !localAudioTrack.enabled}));
     };
 
+    const toggleBackgroundBlurring = async() => {
+        if (localVideoTrack) {
+          if(!isBlurred){
+            processor.setOptions({type: 'blur', blurDegree: 3});
+            await processor.enable();
+            setIsBlurred(true)
+          }else{
+            processor.setOptions({type: 'blur', blurDegree: 3});
+            await processor.disable();
+            setIsBlurred(false);
+          };
+        }
+    };
+
     useEffect(() => {
         const updateVolume = () => {
           const currentVolume = localAudioTrack.getVolumeLevel();
@@ -53,7 +74,26 @@ const useAgoraPublisher = ({client}) => {
         return () => clearInterval(timerId);
     }, [localAudioTrack]);
 
-    return {hasPublished, localVideoTrack, localAudioTrack, volume, isEnabled, publishAgora, toggleVideoOff, toggleAudioOff};
+    useEffect(()=>{
+        const getProcessorInstance = async() => {
+          if (!processor && localVideoTrack) {
+            // Create a VirtualBackgroundProcessor instance
+            let tmpProcessor = extension.createProcessor();
+            try {
+                // Initialize the extension and pass in the URL of the Wasm file
+                await tmpProcessor.init("./assets/wasms");
+            } catch(e) {
+                console.log("Fail to load WASM resource!");return null;
+            }
+            // Inject the extension into the video processing pipeline in the SDK
+            localVideoTrack.pipe(tmpProcessor).pipe(localVideoTrack.processorDestination);
+            setProcessor(tmpProcessor)
+          }
+        }
+        getProcessorInstance()
+    }, [localVideoTrack]);
+
+    return {hasPublished, localVideoTrack, localAudioTrack, volume, isEnabled, publishAgora, toggleVideoOff, toggleAudioOff, toggleBackgroundBlurring};
 };
 
 export default useAgoraPublisher;

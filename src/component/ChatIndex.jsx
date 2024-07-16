@@ -1,12 +1,22 @@
-import { Button, Heading, VStack } from "@chakra-ui/react";
+import { HStack, Image, VStack } from "@chakra-ui/react";
 import ChatInterface from "./chat/ChatInterface";
+import StartBtn from "./StartBtn";
+import * as Images from '../image/index';
+import reload from "../function/reload";
+import { useNavigate } from "react-router-dom";
 
 const ChatIndex = ({liveProfile, chatHook, isPerformer, hasStarted, setHasStarted, isTheyOnline}) => {
+    const navigate = useNavigate();
     return hasStarted
-        ?<ChatInterface chatHook={chatHook} isPerformer={isPerformer} performerIconUrl={liveProfile.iconUrl} isTheyOnline={isTheyOnline} />
-        :<VStack spacing={3}>
-            <Heading>チャット</Heading>
-            <Button mt={5} colorScheme="red" size={'lg'} variant={'outline'} onClick={()=>setHasStarted(true)}>開始</Button>
+        ?<VStack w={'full'} h={'70vh'}>
+            <HStack>
+                <Image src={Images.Horyu} cursor={'pointer'} onClick={reload} />
+                <Image src={Images.Leave} cursor={'pointer'} onClick={()=>navigate('/ended')} />
+            </HStack>
+            <ChatInterface chatHook={chatHook} isPerformer={isPerformer} performerIconUrl={liveProfile.iconUrl} isTheyOnline={isTheyOnline} />
+        </VStack>
+        :<VStack spacing={3} pt={40}>
+            <StartBtn onClick={()=>setHasStarted(true)} />
         </VStack>
 };
 

@@ -1,15 +1,22 @@
-import { Box, Center, Text } from "@chakra-ui/react";
+import { Box, Center, Heading } from "@chakra-ui/react";
+import * as Images from '../image/index';
 
 const CountDownTimer = ({leftSeconds}) => {
     return(
-    <Box bg={'#467c9e'} py={3} w={'full'}>
+    <Box bg={'#467c9e'} py={3} w={'full'} bgImage={`url(${Images.Header})`}>
         <Center>
-            <Text size={'lg'} fontWeight={'bold'} color={'white'}>
-                {leftSeconds>0?`残り${leftSeconds>60?`${Math.floor(leftSeconds/60)}分`:`${Math.abs(leftSeconds)}秒`}`:`${leftSeconds}秒延長`}
-            </Text>
+            <Heading size={'md'} color={'white'}>
+                {leftSeconds>0?`残り${leftSeconds>60?formatSecondsToMinutesAndSeconds(leftSeconds):`${Math.abs(leftSeconds)}秒`}`:`${leftSeconds}秒延長`}
+            </Heading>
         </Center>
     </Box>
     )
 };
 
 export default CountDownTimer;
+
+function formatSecondsToMinutesAndSeconds(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}分${remainingSeconds}秒`;
+}

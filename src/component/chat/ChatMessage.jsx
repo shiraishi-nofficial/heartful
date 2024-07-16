@@ -1,20 +1,22 @@
-import { Avatar, AvatarBadge, Box, Flex, HStack, Stack, Text } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Box, Flex, HStack, Image, Stack, Text } from "@chakra-ui/react";
 
-const ChatMessage = ({ message, isOwnMessage, isTheyOnline, iconUrl}) => (
+const ChatMessage = ({message, kind, isOwnMessage, isTheyOnline, iconUrl, time}) => (
     <Flex justifyContent={isOwnMessage ? 'flex-end' : 'flex-start'}>
         <Stack maxW="90%" m={2} spacing={0}>
             <HStack flexDirection={isOwnMessage ? 'row-reverse' : 'row'}>
                 <Avatar src={iconUrl}>
                     {!isOwnMessage&&isTheyOnline&&<AvatarBadge boxSize='1.25em' bg='green.500' />}
                 </Avatar>
-                <Box border={'solid 1px'} borderColor={isOwnMessage ? '#93b2c4' : 'gray.700'} bg={isOwnMessage ? '#c5dceb' : 'white'} color={isOwnMessage ? 'white' : 'black'} p={3} borderRadius="md">
-                    <Text color={isOwnMessage ? '#578099' : 'gray.500'} whiteSpace={'pre-wrap'}>{message}</Text>
-                </Box>
+                {kind==='text'
+                    ?<Box bg={isOwnMessage ? '#f7f3be' : 'white'} p={3} borderRadius="md">
+                        <Text color={isOwnMessage ? 'black' : 'black'} whiteSpace={'pre-wrap'}>{message}</Text>
+                    </Box>
+                    :<Image src={message} w={'50%'} />
+                }
                 <Stack justify={'end'} h={'full'}>
-                    <Text fontSize={'xs'} >18:49</Text>
+                    <Text fontSize={'xs'} >{time}</Text>
                 </Stack>
             </HStack>
-            
         </Stack>
     </Flex>
 );

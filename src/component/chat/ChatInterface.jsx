@@ -1,10 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
-import { Box, Flex, Button, VStack, Text, Textarea, HStack, useToast } from '@chakra-ui/react';
+import { Box, Flex, VStack, Text, Textarea, HStack, useToast, Image, Heading, Button } from '@chakra-ui/react';
 import ChatMessage from './ChatMessage';
+import * as Images from '../../image/index';
+import extractLocalTimeFromISOString from '../../function/extractLocalTimeFromISOString';
+import ImageForm from '../img/ImageForm';
+import { uploadImageToS3 } from '../../function/aws';
 
 const CHAT_MAX_LENGTH = 400;
 
-const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline}) => {
+const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline, display}) => {
+  const [iconFile, setIconFile] = useState(null);
+  const [fileURL, setFileURL] = useState('');
+  const [iconName, setIconName] = useState('');
   const role = isPerformer?'performer':'audience';
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -31,19 +38,45 @@ const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline}) 
     }
   };
 
+  const resetImg = () => {
+    setIconFile(null);
+    setFileURL('');
+    setIconName('');
+  };
+
+  const sendImg = async() => {
+    try{
+        await uploadImageToS3({filename: iconName, file: iconFile});
+        await chatHook.postChat({role, content: iconName, kind: 'img'});
+        resetImg();
+    }catch(e){
+        toast({ title: 'アイコン設定失敗', description: "正常に更新されませんでした", status: 'error', duration: 9000, isClosable: true});
+    }
+  };
+
   // メッセージ送信後にスクロールをトリガー
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatHook.chatLogList, messages]); // chatLogListとmessagesが更新されたときにスクロール
 
   return (
-    <VStack w={'full'}>
-        <Flex direction="column" h="100vh" px={4} maxW={'1000px'}>
+    <VStack w={'full'} h="80vh" display={display} bg={'skyblue'} position={'relative'}>
+        {fileURL&&<VStack position={'absolute'} w={'full'} bg={'black'} top={'10%'} color={'white'} py={10} >
+          <Heading size={'md'}>画像の確認</Heading>
+          <Image src={fileURL} w={'50%'} />
+          <HStack>
+            <Button size={'xs'} colorScheme='purple' onClick={sendImg}>送信</Button>
+            <Button size={'xs'} colorScheme={'blue'} variant={'outline'} onClick={resetImg}>キャンセル</Button>
+          </HStack>
+        </VStack>}
+        <Flex direction="column" h="100%" w={'full'}>
             <Box flex="1" overflowY="auto">
                 {chatHook.chatLogList.map(chatLog => (
                   <ChatMessage
                       key={chatLog.id}
                       message={chatLog.content}
+                      kind={chatLog.kind}
+                      time={extractLocalTimeFromISOString(chatLog.createdAt)}
                       isOwnMessage={isOwnChatLog(chatLog.role)}
                       isTheyOnline={isTheyOnline}
                       iconUrl={chatLog.role==='performer'&&performerIconUrl}
@@ -55,12 +88,13 @@ const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline}) 
                 <Textarea
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="文字を入力..."
                 mr={2}
                 focusBorderColor='#467c9e'
+                bg={'white'}
                 />
-                <VStack spacing={0} justify={'end'} h={'full'}>
-                  <Button isDisabled={inputValue.length<=0||CHAT_MAX_LENGTH<inputValue.length} onClick={handleSendMessage} colorScheme="blue" bg={'#467c9e'}>送信</Button>
+                <VStack spacing={2} justify={'end'} h={'full'}>
+                  <Image src={Images.Send} opacity={(inputValue.length<=0||CHAT_MAX_LENGTH<inputValue.length)&&.3} onClick={(inputValue.length>0&&CHAT_MAX_LENGTH>=inputValue.length)&&handleSendMessage} cursor={(inputValue.length<=0||CHAT_MAX_LENGTH<inputValue.length)?'not-allowed':'pointer'} />
+                  <ImageForm setImageFile={setIconFile} setFileURL={setFileURL} setIconName={setIconName} />
                   <Text fontSize={'xs'} color={CHAT_MAX_LENGTH<inputValue.length&&'red'}>{inputValue.length}/{CHAT_MAX_LENGTH}</Text>
                 </VStack>
             </HStack>
