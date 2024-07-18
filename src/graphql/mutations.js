@@ -16,6 +16,20 @@ export const createLiveProfile = /* GraphQL */ `
       audiencePassCode
       kind
       isUnpublished
+      sessionDuration {
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
+      screenShareDuration {
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -37,6 +51,20 @@ export const updateLiveProfile = /* GraphQL */ `
       audiencePassCode
       kind
       isUnpublished
+      sessionDuration {
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
+      screenShareDuration {
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -58,6 +86,20 @@ export const deleteLiveProfile = /* GraphQL */ `
       audiencePassCode
       kind
       isUnpublished
+      sessionDuration {
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
+      screenShareDuration {
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -157,6 +199,93 @@ export const deleteLiveSessionDuration = /* GraphQL */ `
     deleteLiveSessionDuration(input: $input, condition: $condition) {
       liveId
       duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createScreenShareDuration = /* GraphQL */ `
+  mutation CreateScreenShareDuration(
+    $input: CreateScreenShareDurationInput!
+    $condition: ModelScreenShareDurationConditionInput
+  ) {
+    createScreenShareDuration(input: $input, condition: $condition) {
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateScreenShareDuration = /* GraphQL */ `
+  mutation UpdateScreenShareDuration(
+    $input: UpdateScreenShareDurationInput!
+    $condition: ModelScreenShareDurationConditionInput
+  ) {
+    updateScreenShareDuration(input: $input, condition: $condition) {
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteScreenShareDuration = /* GraphQL */ `
+  mutation DeleteScreenShareDuration(
+    $input: DeleteScreenShareDurationInput!
+    $condition: ModelScreenShareDurationConditionInput
+  ) {
+    deleteScreenShareDuration(input: $input, condition: $condition) {
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createChatTemplate = /* GraphQL */ `
+  mutation CreateChatTemplate(
+    $input: CreateChatTemplateInput!
+    $condition: ModelChatTemplateConditionInput
+  ) {
+    createChatTemplate(input: $input, condition: $condition) {
+      id
+      content
+      weight
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateChatTemplate = /* GraphQL */ `
+  mutation UpdateChatTemplate(
+    $input: UpdateChatTemplateInput!
+    $condition: ModelChatTemplateConditionInput
+  ) {
+    updateChatTemplate(input: $input, condition: $condition) {
+      id
+      content
+      weight
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteChatTemplate = /* GraphQL */ `
+  mutation DeleteChatTemplate(
+    $input: DeleteChatTemplateInput!
+    $condition: ModelChatTemplateConditionInput
+  ) {
+    deleteChatTemplate(input: $input, condition: $condition) {
+      id
+      content
+      weight
       createdAt
       updatedAt
       __typename

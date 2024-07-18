@@ -50,7 +50,7 @@ const Watch = () => {
                 <VStack w={'full'} bgColor={'purple'}>
                     <Heading size={'md'} color={'white'} py={2}>{LiveKindName(liveProfile?.kind)}</Heading>
                 </VStack>
-                <Image src={Images.Obi} mb={5} />
+                <Image src={Images.Obi} mb={5} w={'full'} />
                 {liveProfile.kind==='chat'
                     ?<ChatIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} hasStarted={hasStarted} setHasStarted={setHasStarted} isTheyOnline={isTheyOnline} />
                     :liveProfile.kind==='audio'

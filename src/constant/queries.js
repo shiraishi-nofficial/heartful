@@ -59,6 +59,7 @@ export const listLiveProfiles = /* GraphQL */ `
     }
   }
 `;
+
 export const liveProfilesByType = /* GraphQL */ `
   query LiveProfilesByType(
     $type: String!
@@ -88,6 +89,12 @@ export const liveProfilesByType = /* GraphQL */ `
         isUnpublished
         createdAt
         updatedAt
+        sessionDuration {
+          duration
+        }
+        screenShareDuration {
+          duration
+        }
         __typename
       }
       nextToken
@@ -95,6 +102,7 @@ export const liveProfilesByType = /* GraphQL */ `
     }
   }
 `;
+
 export const getChatLog = /* GraphQL */ `
   query GetChatLog($id: ID!) {
     getChatLog(id: $id) {
@@ -236,38 +244,6 @@ export const listScreenShareDurations = /* GraphQL */ `
       items {
         liveId
         duration
-        createdAt
-        updatedAt
-        __typename
-      }
-      nextToken
-      __typename
-    }
-  }
-`;
-export const getChatTemplate = /* GraphQL */ `
-  query GetChatTemplate($id: ID!) {
-    getChatTemplate(id: $id) {
-      id
-      content
-      weight
-      createdAt
-      updatedAt
-      __typename
-    }
-  }
-`;
-export const listChatTemplates = /* GraphQL */ `
-  query ListChatTemplates(
-    $filter: ModelChatTemplateFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listChatTemplates(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        content
-        weight
         createdAt
         updatedAt
         __typename

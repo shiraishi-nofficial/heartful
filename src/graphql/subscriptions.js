@@ -19,6 +19,20 @@ export const onCreateLiveProfile = /* GraphQL */ `
       audiencePassCode
       kind
       isUnpublished
+      sessionDuration {
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
+      screenShareDuration {
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -43,6 +57,20 @@ export const onUpdateLiveProfile = /* GraphQL */ `
       audiencePassCode
       kind
       isUnpublished
+      sessionDuration {
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
+      screenShareDuration {
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -67,6 +95,20 @@ export const onDeleteLiveProfile = /* GraphQL */ `
       audiencePassCode
       kind
       isUnpublished
+      sessionDuration {
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
+      screenShareDuration {
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -163,6 +205,87 @@ export const onDeleteLiveSessionDuration = /* GraphQL */ `
     onDeleteLiveSessionDuration(filter: $filter) {
       liveId
       duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateScreenShareDuration = /* GraphQL */ `
+  subscription OnCreateScreenShareDuration(
+    $filter: ModelSubscriptionScreenShareDurationFilterInput
+  ) {
+    onCreateScreenShareDuration(filter: $filter) {
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateScreenShareDuration = /* GraphQL */ `
+  subscription OnUpdateScreenShareDuration(
+    $filter: ModelSubscriptionScreenShareDurationFilterInput
+  ) {
+    onUpdateScreenShareDuration(filter: $filter) {
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteScreenShareDuration = /* GraphQL */ `
+  subscription OnDeleteScreenShareDuration(
+    $filter: ModelSubscriptionScreenShareDurationFilterInput
+  ) {
+    onDeleteScreenShareDuration(filter: $filter) {
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateChatTemplate = /* GraphQL */ `
+  subscription OnCreateChatTemplate(
+    $filter: ModelSubscriptionChatTemplateFilterInput
+  ) {
+    onCreateChatTemplate(filter: $filter) {
+      id
+      content
+      weight
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateChatTemplate = /* GraphQL */ `
+  subscription OnUpdateChatTemplate(
+    $filter: ModelSubscriptionChatTemplateFilterInput
+  ) {
+    onUpdateChatTemplate(filter: $filter) {
+      id
+      content
+      weight
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteChatTemplate = /* GraphQL */ `
+  subscription OnDeleteChatTemplate(
+    $filter: ModelSubscriptionChatTemplateFilterInput
+  ) {
+    onDeleteChatTemplate(filter: $filter) {
+      id
+      content
+      weight
       createdAt
       updatedAt
       __typename

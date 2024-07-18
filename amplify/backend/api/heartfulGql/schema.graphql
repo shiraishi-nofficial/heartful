@@ -16,11 +16,14 @@ type LiveProfile
   performerUsername: String!
   starttime: Int!
   duration: Int!
-  type: String! # live only
+  type: String! @index(name: "byType", queryField: "liveProfilesByType", sortKeyFields: ["starttime"]) # live only  
   performerPassCode: Int!  # 6桁
   audiencePassCode: Int!  # 6桁
   kind: String!  # chat, audio, video
   isUnpublished: Boolean!
+  sessionDuration: LiveSessionDuration @hasOne(fields: ["id"])
+  screenShareDuration: ScreenShareDuration @hasOne(fields: ["id"])
+  createdAt: AWSDateTime
 }
 
 type ChatLog
@@ -57,4 +60,30 @@ type LiveSessionDuration
   liveId: ID! @primaryKey
   duration: Int!
   createdAt: AWSDateTime
+}
+
+type ScreenShareDuration
+  @model
+  @auth(
+    rules: [
+      { allow: private, provider: userPools, operations: [create, read, update] }
+      { allow: public, provider: iam, operations: [create, read, update] }
+    ]
+  ) {
+  liveId: ID! @primaryKey
+  duration: Int!
+  createdAt: AWSDateTime
+}
+
+type ChatTemplate
+  @model
+  @auth(
+    rules: [
+      { allow: private, provider: userPools, operations: [create, read, update, delete] }
+      { allow: public, provider: iam, operations: [create, read, update, delete] }
+    ]
+  ) {
+  id: ID
+  content: String!
+  weight: Int!
 }

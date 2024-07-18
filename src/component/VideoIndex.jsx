@@ -5,7 +5,7 @@ import { AgoraVideoPlayer } from "agora-rtc-react";
 import VideoInterface from "./video/VideoInterface";
 import FuncBox from "./FuncBox";
 import ChatInterface from "./chat/ChatInterface";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ScreenShareBox from "./ScreenShareBox";
 import WatchScreenShareBox from "./WatchScreenShareBox";
 import StartBtn from "./StartBtn";
@@ -24,7 +24,7 @@ const modeImgList = [
     {mode: 42, img: Images.Mode8},
 ];
 
-const VideoIndex = ({liveProfile, uid, newMsgList, chatHook, isPerformer, hasStarted, setHasStarted, isTheyOnline}) => {
+const VideoIndex = ({liveProfile, uid, setHasScreenShare, newMsgList, chatHook, isPerformer, hasStarted, setHasStarted, isTheyOnline}) => {
     const [isVideoModeShowed, setIsVideoModeShowed] = useBoolean(false);
     const [hasCommentShowed, setHasCommentShowed] = useBoolean(false);
     const [isCommentShowed, setIsCommentShowed] = useBoolean(false);
@@ -69,6 +69,16 @@ const VideoIndex = ({liveProfile, uid, newMsgList, chatHook, isPerformer, hasSta
         {name: '退出', icon: Images.Leave, onClick: ()=>navitate('/ended')},
     ].filter(Boolean);
 
+    useEffect(()=>{
+        if(setHasScreenShare){
+            if(screenVideoTrack){
+                setHasScreenShare(true);
+            }else{
+                setHasScreenShare(false);
+            }
+        }
+    }, [screenVideoTrack]);
+
     return hasPublished
         ?<Box w={'full'} pos={'relative'}>
             {/* {hasCommentShowed&&<Box display={!isCommentShowed&&'none'} pos={'absolute'} left={0} w={'full'} h={'full'} bg={'rgba(0, 0, 0, 0.5)'} zIndex={999}>
@@ -102,7 +112,7 @@ const VideoIndex = ({liveProfile, uid, newMsgList, chatHook, isPerformer, hasSta
         </Box>
         :<VStack spacing={3} w={'full'}>
             {/* {isPerformer&&<IconSetting username={liveProfile.performerUsername} defaultIconUrl={liveProfile?.iconUrl} handleIconChange={handleIconChange} />} */}
-            {localVideoTrack&&localAudioTrack&&<AspectRatio ratio={9/16} w={'60%'} maxW={'xs'}><AgoraVideoPlayer videoTrack={localVideoTrack} style={{height: '100%', width: '100%'}} /></AspectRatio>}
+            {localVideoTrack&&localAudioTrack&&<AspectRatio ratio={9/16} w={{base: '30%', md: '60%'}} maxH={'full'} maxW={'xs'}><AgoraVideoPlayer videoTrack={localVideoTrack} style={{height: '100%', width: '100%'}} /></AspectRatio>}
             {localVideoTrack&&localAudioTrack&&<Progress colorScheme='green' size='sm' value={volume} w={'60%'} maxW={'xs'} />}
             <HStack>
                 {hasJoined&&localVideoTrack&&localAudioTrack&&<StartBtn onClick={handleStart} />}

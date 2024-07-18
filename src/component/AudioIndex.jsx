@@ -10,8 +10,9 @@ import * as Images from '../image/index';
 import StartBtn from "./StartBtn";
 import reload from "../function/reload";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
-const AudioIndex = ({liveProfile, uid, chatHook, isPerformer, setHasStarted, isTheyOnline}) => {
+const AudioIndex = ({liveProfile, uid, chatHook, setHasScreenShare, isPerformer, setHasStarted, isTheyOnline}) => {
     const {client, hasJoined, remoteUserList, screenVideoTrack, isPoorNetworkQuality} = useAgoraChannel({uid: uid, cname: liveProfile?.id});
     const {hasPublished, localAudioTrack, volume, publishAgora, toggleAudioOff} = useAgoraAudioPublisher({client});
     const [isScreenShareShowed, setIsScreenShareShowed] = useBoolean(false);
@@ -37,6 +38,16 @@ const AudioIndex = ({liveProfile, uid, chatHook, isPerformer, setHasStarted, isT
         {name: '保留', icon: Images.Horyu, onClick: reload},
         {name: '退出', icon: Images.Leave, onClick: ()=>navitate('/ended')},
     ].filter(Boolean);
+
+    useEffect(()=>{
+        if(setHasScreenShare){
+            if(screenVideoTrack){
+                setHasScreenShare(true);
+            }else{
+                setHasScreenShare(false);
+            }
+        }
+    }, [screenVideoTrack]);
 
     return hasPublished
         ?<VStack w={'full'} h={'70vh'}>

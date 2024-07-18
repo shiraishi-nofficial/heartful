@@ -13,12 +13,14 @@ import reload from "../function/reload";
 import hasOneWeekPassed from "../function/hasOneWeekPassed";
 import * as Images from '../image/index';
 import LiveKindName from "../function/LiveKindName";
+import useScreenShareDuration from "../hook/aws/useScreenSessionDuration";
 
 const UID = 11111;
 const IS_PERFORMER = true;
 
 const Broadcast = () => {
     const [hasStarted, setHasStarted] = useState(false);
+    const [hasScreenShare, setHasScreenShare] = useState(false);
     const { liveId } = useParams();
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -27,6 +29,7 @@ const Broadcast = () => {
     const {isReady: isChatLogListReady, newMsgList, ...chatHook} = useChatLogList({liveId, isSub: true, role: IS_PERFORMER?'performer':'audience'});
     const {isTheyOnline} = useAgoraRtm({liveId: liveProfile?.id, role: IS_PERFORMER?'performer':'audience', isActive: hasStarted});
     const {leftSeconds} = useLiveSessionDuration({liveId, liveDuration: liveProfile?.duration, isTheyOnline, isActive: IS_PERFORMER});
+    useScreenShareDuration({liveId, hasScreenShare});
     const navigate = useNavigate();
 
     useEffect(()=>{
@@ -44,18 +47,18 @@ const Broadcast = () => {
     
     return (isReady&&isChatLogListReady)
         ?!passCodeError
-            ?(<VStack bgImage={`url(${Images.Bg})`} bgSize="cover" bgPosition="center" width="100%" height="100vh" spacing={0}>
+            ?(<VStack bgImage={`url(${Images.Bg})`} bgSize="cover" bgPosition="center" width="100%" height="120vh" spacing={0}>
                 <CountDownTimer leftSeconds={leftSeconds} />
                 <VStack w={'full'} bgColor={'purple'}>
                     <Heading size={'md'} color={'white'} py={2}>{LiveKindName(liveProfile?.kind)}</Heading>
                 </VStack>
-                <Image src={Images.Obi} mb={5} />
+                <Image src={Images.Obi} mb={5} w={'full'} />
                 {liveProfile.kind==='chat'
                     ?<ChatIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} hasStarted={hasStarted} setHasStarted={setHasStarted} isTheyOnline={isTheyOnline} />
                     :liveProfile.kind==='audio'
-                        ?<AudioIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} hasStarted={hasStarted} setHasStarted={setHasStarted} isTheyOnline={isTheyOnline} />
+                        ?<AudioIndex liveProfile={liveProfile} setHasScreenShare={setHasScreenShare} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} hasStarted={hasStarted} setHasStarted={setHasStarted} isTheyOnline={isTheyOnline} />
                         :liveProfile.kind==='video'
-                            ?<VideoIndex liveProfile={liveProfile} newMsgList={newMsgList} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} hasStarted={hasStarted} setHasStarted={setHasStarted} isTheyOnline={isTheyOnline} />
+                            ?<VideoIndex liveProfile={liveProfile} setHasScreenShare={setHasScreenShare} newMsgList={newMsgList} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} hasStarted={hasStarted} setHasStarted={setHasStarted} isTheyOnline={isTheyOnline} />
                             :<Heading>何にもなし</Heading>}
             </VStack>
             )

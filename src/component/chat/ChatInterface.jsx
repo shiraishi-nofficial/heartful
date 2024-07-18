@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Box, Flex, VStack, Text, Textarea, HStack, useToast, Image, Heading, Button } from '@chakra-ui/react';
+import { Box, Flex, VStack, Text, Textarea, HStack, useToast, Image, Heading, Button, Select } from '@chakra-ui/react';
 import ChatMessage from './ChatMessage';
 import * as Images from '../../image/index';
 import extractLocalTimeFromISOString from '../../function/extractLocalTimeFromISOString';
 import ImageForm from '../img/ImageForm';
 import { uploadImageToS3 } from '../../function/aws';
+import useChatTemplateList from '../../hook/aws/useChatTemplateList';
 
 const CHAT_MAX_LENGTH = 400;
 
@@ -17,6 +18,7 @@ const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline, d
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef(null);
   const toast = useToast();
+  const {chatTemplateList, isReady} = useChatTemplateList();
 
   const handleSendMessage = async() => {
     if(inputValue.length===0){
@@ -98,6 +100,9 @@ const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline, d
                   <Text fontSize={'xs'} color={CHAT_MAX_LENGTH<inputValue.length&&'red'}>{inputValue.length}/{CHAT_MAX_LENGTH}</Text>
                 </VStack>
             </HStack>
+            {isReady&&isPerformer&&<Select w={'full'} size={'sm'} placeholder='定型文から選ぶ' bg={'purple'} color={'white'} onChange={e=>setInputValue(e.target.value)}>
+              {chatTemplateList.map(item=><option key={item.id} value={item.content}>{item.content}</option>)}
+            </Select>}
         </Flex>
     </VStack>
   );
