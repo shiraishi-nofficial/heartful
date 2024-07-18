@@ -6,7 +6,7 @@ const CountDownTimer = ({leftSeconds}) => {
     <Box bg={'#467c9e'} py={3} w={'full'} bgImage={`url(${Images.Header})`}>
         <Center>
             <Heading size={'md'} color={'white'}>
-                {leftSeconds>0?`残り${leftSeconds>60?formatSecondsToMinutesAndSeconds(leftSeconds):`${Math.abs(leftSeconds)}秒`}`:`${leftSeconds}秒延長`}
+                {leftSeconds>0?`残り${leftSeconds>60?formatSecondsToMinutesAndSeconds(leftSeconds):`${Math.abs(leftSeconds)}秒`}`:`${leftSeconds*-1}秒延長`}
             </Heading>
         </Center>
     </Box>
