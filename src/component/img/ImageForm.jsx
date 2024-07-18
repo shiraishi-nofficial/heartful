@@ -24,7 +24,7 @@ const ImageForm = ({setImageFile, setFileURL, setIconName}) => {
     };
     return(
     <VStack>
-        <Button colorScheme={'linkedin'} onClick={fileUpload} size={'xs'}>画像送信</Button>
+        <Button colorScheme={'linkedin'} onClick={fileUpload} size={'xs'}>画像添付</Button>
         <Input id='image' ref={inputRef} type="file" hidden accept="image/*,.png,.jpg,.jpeg" variant='unstyled' onChange={(e) => recieveImageFile(e)} />
     </VStack>
     )

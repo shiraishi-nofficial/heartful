@@ -86,21 +86,27 @@ const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline, d
                 ))}
                 <div ref={messagesEndRef} /> {/* スクロール位置の参照ポイント */}
             </Box>
-            <HStack p={4}>
-                <Textarea
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                mr={2}
-                focusBorderColor='#467c9e'
-                bg={'white'}
-                />
-                <VStack spacing={2} justify={'end'} h={'full'}>
-                  <Image src={Images.Send} opacity={(inputValue.length<=0||CHAT_MAX_LENGTH<inputValue.length)&&.3} onClick={(inputValue.length>0&&CHAT_MAX_LENGTH>=inputValue.length)&&handleSendMessage} cursor={(inputValue.length<=0||CHAT_MAX_LENGTH<inputValue.length)?'not-allowed':'pointer'} />
-                  <ImageForm setImageFile={setIconFile} setFileURL={setFileURL} setIconName={setIconName} />
-                  <Text fontSize={'xs'} color={CHAT_MAX_LENGTH<inputValue.length&&'red'}>{inputValue.length}/{CHAT_MAX_LENGTH}</Text>
+            <HStack px={1} py={4} spacing={0}>
+                <VStack w={'full'} spacing={0}>
+                  <HStack w={'full'}>
+                    <Textarea
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    mr={2}
+                    focusBorderColor='#467c9e'
+                    bg={'white'}
+                    />
+                  </HStack>
+                  <HStack justify={'space-between'} w={'full'}>
+                    <ImageForm setImageFile={setIconFile} setFileURL={setFileURL} setIconName={setIconName} />
+                    <Text pr={2} fontSize={'xs'} color={CHAT_MAX_LENGTH<inputValue.length&&'red'} w={'full'} textAlign={'right'}>{inputValue.length}/{CHAT_MAX_LENGTH}</Text>
+                  </HStack>
+                </VStack>
+                <VStack justify={'center'} h={'full'}>
+                  <Image w={'full'} src={Images.Send} opacity={(inputValue.length<=0||CHAT_MAX_LENGTH<inputValue.length)&&.3} onClick={(inputValue.length>0&&CHAT_MAX_LENGTH>=inputValue.length)&&handleSendMessage} cursor={(inputValue.length<=0||CHAT_MAX_LENGTH<inputValue.length)?'not-allowed':'pointer'} />
                 </VStack>
             </HStack>
-            {isReady&&isPerformer&&<Select w={'full'} size={'sm'} placeholder='定型文から選ぶ' bg={'purple'} color={'white'} onChange={e=>setInputValue(e.target.value)}>
+            {isReady&&isPerformer&&<Select w={'full'} size={'sm'} placeholder='定型文から選ぶ' bg={'purple'} color={'white'} onChange={e=>setInputValue(e.target.value)} mt={-2}>
               {chatTemplateList.map(item=><option key={item.id} value={item.content}>{item.content}</option>)}
             </Select>}
         </Flex>
