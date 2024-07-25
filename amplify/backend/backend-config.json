@@ -41,6 +41,20 @@
       },
       "providerPlugin": "awscloudformation",
       "service": "AppSync"
+    },
+    "heartfulResultApi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "heartfulResultFunc"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
     }
   },
   "auth": {
@@ -79,6 +93,21 @@
       "service": "Lambda"
     },
     "createHeartfulLive": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "heartfulGql"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "heartfulResultFunc": {
       "build": true,
       "dependsOn": [
         {
@@ -132,6 +161,22 @@
         {
           "category": "function",
           "resourceName": "createHeartfulLive"
+        }
+      ]
+    },
+    "AMPLIFY_function_heartfulResultFunc_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "heartfulResultFunc"
+        }
+      ]
+    },
+    "AMPLIFY_function_heartfulResultFunc_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "heartfulResultFunc"
         }
       ]
     }

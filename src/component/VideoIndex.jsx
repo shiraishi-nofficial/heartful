@@ -52,7 +52,8 @@ const VideoIndex = ({liveProfile, uid, setHasScreenShare, newMsgList, chatHook, 
     ];
 
     const performerFuncBoxList = [
-        {name: '画面共有', icon: Images.ScreenShareImg, isOpen: isScreenShareShowed, onClick: ()=>{setIsScreenShareShowed.toggle()}},
+        // {name: '画面共有', icon: Images.ScreenShareImg, isOpen: isScreenShareShowed, onClick: ()=>{setIsScreenShareShowed.toggle()}},
+        {name: '保留', icon: Images.Horyu, onClick: reload},
     ];
 
     const funcBoxList = [
@@ -65,7 +66,6 @@ const VideoIndex = ({liveProfile, uid, setHasScreenShare, newMsgList, chatHook, 
          ...(isPerformer
             ?performerFuncBoxList
             :[]),
-        {name: '保留', icon: Images.Horyu, onClick: reload},
         {name: '退出', icon: Images.Leave, onClick: ()=>navitate('/ended')},
     ].filter(Boolean);
 

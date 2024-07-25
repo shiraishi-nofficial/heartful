@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Box, Flex, VStack, Text, Textarea, HStack, useToast, Image, Heading, Button, Select } from '@chakra-ui/react';
+import { Box, Flex, VStack, Text, Textarea, HStack, useToast, Image, Heading, Button, Select, Stack } from '@chakra-ui/react';
 import ChatMessage from './ChatMessage';
 import * as Images from '../../image/index';
 import extractLocalTimeFromISOString from '../../function/extractLocalTimeFromISOString';
@@ -19,6 +19,7 @@ const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline, d
   const messagesEndRef = useRef(null);
   const toast = useToast();
   const {chatTemplateList, isReady} = useChatTemplateList();
+  const [isImgSending, setImgSending] = useState(false);
 
   const handleSendMessage = async() => {
     if(inputValue.length===0){
@@ -47,32 +48,37 @@ const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline, d
   };
 
   const sendImg = async() => {
+    setImgSending(true);
     try{
         await uploadImageToS3({filename: iconName, file: iconFile});
+        await new Promise(resolve => setTimeout(resolve, 1000));
         await chatHook.postChat({role, content: iconName, kind: 'img'});
         resetImg();
     }catch(e){
         toast({ title: 'アイコン設定失敗', description: "正常に更新されませんでした", status: 'error', duration: 9000, isClosable: true});
     }
+    setImgSending(false);
   };
 
   // メッセージ送信後にスクロールをトリガー
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [chatHook.chatLogList, messages]); // chatLogListとmessagesが更新されたときにスクロール
+    setTimeout(()=>{
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 500)
+  }, [chatHook.chatLogList.length, messages]); // chatLogListとmessagesが更新されたときにスクロール
 
   return (
-    <VStack w={'full'} h="80vh" display={display} bg={'skyblue'} position={'relative'}>
-        {fileURL&&<VStack position={'absolute'} w={'full'} bg={'black'} top={'10%'} color={'white'} py={10} >
+    <VStack w={'full'} h="80vh" display={display} bgImage={`url(${Images.ChatBg})`} bgSize={'cover'} position={'relative'}>
+        {fileURL&&<VStack position={'absolute'} w={'full'} bg={'black'} top={'10%'} color={'white'} py={10} zIndex={999999999999} >
           <Heading size={'md'}>画像の確認</Heading>
-          <Image src={fileURL} w={'50%'} />
+          <Image src={fileURL} maxW={'50%'} maxH={'40vh'} />
           <HStack>
-            <Button size={'xs'} colorScheme='purple' onClick={sendImg}>送信</Button>
-            <Button size={'xs'} colorScheme={'blue'} variant={'outline'} onClick={resetImg}>キャンセル</Button>
+            <Button size={'xs'} colorScheme='purple' onClick={sendImg} isLoading={isImgSending}>送信</Button>
+            <Button size={'xs'} colorScheme={'blue'} variant={'outline'} onClick={resetImg} isDisabled={isImgSending}>キャンセル</Button>
           </HStack>
         </VStack>}
-        <Flex direction="column" h="100%" w={'full'}>
-            <Box flex="1" overflowY="auto">
+        <Stack justify={'space-between'} h="95%" w={'full'}>
+            <Box overflowY="scroll">
                 {chatHook.chatLogList.map(chatLog => (
                   <ChatMessage
                       key={chatLog.id}
@@ -84,7 +90,7 @@ const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline, d
                       iconUrl={chatLog.role==='performer'&&performerIconUrl}
                   />
                 ))}
-                <div ref={messagesEndRef} /> {/* スクロール位置の参照ポイント */}
+                <Box ref={messagesEndRef} /> {/* スクロール位置の参照ポイント */}
             </Box>
             <HStack px={1} py={4} spacing={0}>
                 <VStack w={'full'} spacing={0}>
@@ -106,10 +112,10 @@ const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline, d
                   <Image w={'full'} src={Images.Send} opacity={(inputValue.length<=0||CHAT_MAX_LENGTH<inputValue.length)&&.3} onClick={(inputValue.length>0&&CHAT_MAX_LENGTH>=inputValue.length)&&handleSendMessage} cursor={(inputValue.length<=0||CHAT_MAX_LENGTH<inputValue.length)?'not-allowed':'pointer'} />
                 </VStack>
             </HStack>
-            {isReady&&isPerformer&&<Select w={'full'} size={'sm'} placeholder='定型文から選ぶ' bg={'purple'} color={'white'} onChange={e=>setInputValue(e.target.value)} mt={-2}>
-              {chatTemplateList.map(item=><option key={item.id} value={item.content}>{item.content}</option>)}
-            </Select>}
-        </Flex>
+        </Stack>
+        {isReady&&isPerformer&&<Select w={'full'} size={'sm'} placeholder='定型文から選ぶ' bg={'purple'} color={'white'} onChange={e=>setInputValue(e.target.value)} mt={-2}>
+            {chatTemplateList.map(item=><option key={item.id} value={item.content}>{item.content}</option>)}
+        </Select>}
     </VStack>
   );
 };

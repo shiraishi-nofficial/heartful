@@ -1,12 +1,14 @@
 import { FormControl, FormLabel, Heading, Input, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import VerifiedScreen from "../../component/mng/chatTemplate/VerifiedScreen";
+import useCheckPwd from "../../hook/useCheckPwd";
 
 const PASS_CODE = 'i93okl3mfajwfa';
 
 const ChatTemplate = () => {
     const [targetPassCode, SetTargetPassCode] = useState('');
     const [isVerified, setIsVerified] = useState(false);
+    const {isValid} = useCheckPwd(PASS_CODE);
 
     useEffect(()=>{
         if(targetPassCode===PASS_CODE){
@@ -19,7 +21,7 @@ const ChatTemplate = () => {
             <VStack spacing={0}>
                 <Heading>チャット定型文管理画面</Heading>
             </VStack>
-            {isVerified
+            {(isVerified||isValid)
                 ?<VerifiedScreen />
                 :<FormControl maxW={'700px'}>
                     <FormLabel>パスワード</FormLabel>

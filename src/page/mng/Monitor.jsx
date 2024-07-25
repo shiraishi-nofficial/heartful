@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useLiveProfile from "../../hook/aws/useLiveProfile";
 import VerifiedScreen from "../../component/mng/monitor/VerifiedScreen";
+import useCheckPwd from "../../hook/useCheckPwd";
 
 const PASS_CODE = 'feijaomoiajoifaljfklaw';
 const IS_PERFORMER = false;
@@ -12,6 +13,8 @@ const Monitor = () => {
     const [isVerified, setIsVerified] = useState(false);
     const { liveId } = useParams();
     const {liveProfile, isReady, passCodeError} = useLiveProfile({liveId, passCode: '333', isPerformer: IS_PERFORMER});
+    const {isValid} = useCheckPwd(PASS_CODE);
+
 
     useEffect(()=>{
         if(targetPassCode===PASS_CODE){
@@ -25,7 +28,7 @@ const Monitor = () => {
                 <Heading>配信監視画面</Heading>
                 <Text>{isReady&&liveProfile.kind}</Text>
             </VStack>
-            {isVerified
+            {(isVerified||isValid)
                 ?<VerifiedScreen liveId={liveId} liveProfile={liveProfile} />
                 :<FormControl maxW={'700px'}>
                     <FormLabel>パスワード</FormLabel>

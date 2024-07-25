@@ -17,7 +17,8 @@
       },
       "api": {
         "heartfulGql": {},
-        "heartfulAgoraApi": {}
+        "heartfulAgoraApi": {},
+        "heartfulResultApi": {}
       },
       "function": {
         "createHeartfulLive": {
@@ -28,6 +29,10 @@
           "secretsPathAmplifyAppId": "d316qfukj0xrv7",
           "deploymentBucketName": "amplify-heartful-dev-9c8a7-deployment",
           "s3Key": "amplify-builds/createHeartfulAgoraToken-3359764f714e58375651-build.zip"
+        },
+        "heartfulResultFunc": {
+          "deploymentBucketName": "amplify-heartful-dev-9c8a7-deployment",
+          "s3Key": "amplify-builds/heartfulResultFunc-4d4c7a72772b4a34634e-build.zip"
         }
       },
       "storage": {

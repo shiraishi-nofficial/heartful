@@ -35,7 +35,12 @@ const Broadcast = () => {
     useEffect(()=>{
         if(liveProfile?.starttime){
             if(hasOneWeekPassed(liveProfile?.starttime)){
-                navigate('/')
+                navigate('/');
+            }
+            const currentUnixTime = Math.floor(Date.now() / 1000);
+            const buffer = 18000;
+            if(liveProfile?.starttime+liveProfile?.duration+buffer<currentUnixTime){
+                window.location.href = 'https://uranai.heartf.com/Public/Videochat/error';
             }
         }
     }, [liveProfile?.starttime]);
@@ -48,7 +53,7 @@ const Broadcast = () => {
     return (isReady&&isChatLogListReady)
         ?!passCodeError
             ?(<VStack bgImage={`url(${Images.Bg})`} bgSize="cover" bgPosition="center" width="100%" height="120vh" spacing={0}>
-                <CountDownTimer leftSeconds={leftSeconds} />
+                <CountDownTimer leftSeconds={leftSeconds} isPerformer={IS_PERFORMER} />
                 <VStack w={'full'} bgColor={'purple'}>
                     <Heading size={'md'} color={'white'} py={2}>{LiveKindName(liveProfile?.kind)}</Heading>
                 </VStack>

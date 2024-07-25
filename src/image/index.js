@@ -21,6 +21,7 @@ import Mode8 from './mode8.svg';
 import Send from './sousin.svg';
 import Leave from './taisyutu.svg';
 import Horyu from './horyu.svg';
+import ChatBg from './chat-bg.png';
 
 
-export {MicImg, MicImgToumei, CameraImg, CameraImgToumei, ModeImg, ModeImgToumei, ChatImg, ScreenShareImg, Bg, Header, Obi, VideoIcon, Mode1, Mode2, Mode3, Mode4, Mode5, Mode6, Mode7, Mode8, Send, Leave, Horyu};
+export {MicImg, MicImgToumei, CameraImg, CameraImgToumei, ModeImg, ModeImgToumei, ChatImg, ScreenShareImg, Bg, Header, Obi, VideoIcon, Mode1, Mode2, Mode3, Mode4, Mode5, Mode6, Mode7, Mode8, Send, Leave, Horyu, ChatBg};

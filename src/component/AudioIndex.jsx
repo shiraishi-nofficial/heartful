@@ -19,7 +19,7 @@ const AudioIndex = ({liveProfile, uid, chatHook, setHasScreenShare, isPerformer,
     const useScreenShareState = useBoolean(false);
     const gradientPercentage = Math.min(Math.max(volume, 0), 100);
 
-    const navitate = useNavigate();
+    const navigate = useNavigate();
 
     const handleStart = async() => {
         await publishAgora();
@@ -27,7 +27,8 @@ const AudioIndex = ({liveProfile, uid, chatHook, setHasScreenShare, isPerformer,
     };
 
     const performerFuncBoxList = [
-        {name: '画面共有', icon: Images.ScreenShareImg, isOpen: isScreenShareShowed, onClick: ()=>{setIsScreenShareShowed.toggle()}},
+        // {name: '画面共有', icon: Images.ScreenShareImg, isOpen: isScreenShareShowed, onClick: ()=>{setIsScreenShareShowed.toggle()}},
+        {name: '保留', icon: Images.Horyu, onClick: reload},
     ];
 
     const funcBoxList = [
@@ -35,8 +36,7 @@ const AudioIndex = ({liveProfile, uid, chatHook, setHasScreenShare, isPerformer,
         ...(isPerformer
             ?performerFuncBoxList
             :[]),
-        {name: '保留', icon: Images.Horyu, onClick: reload},
-        {name: '退出', icon: Images.Leave, onClick: ()=>navitate('/ended')},
+        {name: '退出', icon: Images.Leave, onClick: ()=>navigate('/ended')},
     ].filter(Boolean);
 
     useEffect(()=>{

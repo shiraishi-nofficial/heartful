@@ -8,6 +8,11 @@ export type AmplifyDependentResourcesAttributes = {
     "heartfulGql": {
       "GraphQLAPIEndpointOutput": "string",
       "GraphQLAPIIdOutput": "string"
+    },
+    "heartfulResultApi": {
+      "ApiId": "string",
+      "ApiName": "string",
+      "RootUrl": "string"
     }
   },
   "auth": {
@@ -30,6 +35,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Region": "string"
     },
     "createHeartfulLive": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "heartfulResultFunc": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",

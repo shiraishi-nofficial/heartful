@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "paths": {
+    "/json": {
+      "name": "/json",
+      "lambdaFunction": "heartfulResultFunc",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}
