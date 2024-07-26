@@ -65,6 +65,7 @@ const VerifiedScreen = () => {
                             <Th>予定秒数</Th>
                             <Th>実績秒数</Th>
                             <Th>画面共有時間</Th>
+                            <Th>通信料概算</Th>
                             <Th>ID</Th>
                         </Tr>
                     </Thead>
@@ -77,6 +78,7 @@ const VerifiedScreen = () => {
                             <Td>{item.duration}</Td>
                             <Td>{item?.sessionDuration?item.sessionDuration.duration:0}</Td>
                             <Td>{item?.screenShareDuration?item.screenShareDuration.duration:0}</Td>
+                            <Td>{calculateFee((item?.sessionDuration?item.sessionDuration.duration:0), item.kind)}</Td>
                             <Td>{item.id}</Td>
                         </Tr>)}
                     </Tbody>
@@ -95,4 +97,13 @@ function getTodayDate() {
     const day = ("0" + today.getDate()).slice(-2); // 2桁にフォーマット
 
     return `${year}-${month}-${day}`;
+}
+
+const calculateFee = (sec, type) => {
+    const unit = type==='video'
+                    ?5
+                    :type==='audio'
+                        ?2.5
+                        :2
+    return unit*sec;
 }
