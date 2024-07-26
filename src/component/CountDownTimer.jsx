@@ -16,7 +16,7 @@ const CountDownTimer = ({leftSeconds, isPerformer}) => {
 export default CountDownTimer;
 
 function formatSecondsToMinutesAndSeconds(seconds, isPerformer) {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
+    const minutes = Math.abs(Math.floor(seconds / 60));
+    const remainingSeconds = Math.abs(seconds % 60);
     return isPerformer?`${minutes}分${remainingSeconds}秒`:`${minutes}分`;
 }

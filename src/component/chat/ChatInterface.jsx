@@ -113,7 +113,7 @@ const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline, d
                 </VStack>
             </HStack>
         </Stack>
-        {isReady&&isPerformer&&<Select w={'full'} size={'sm'} placeholder='定型文から選ぶ' bg={'purple'} color={'white'} onChange={e=>setInputValue(e.target.value)} mt={-2}>
+        {isReady&&isPerformer&&<Select w={'full'} size={'sm'} placeholder='定型文から選ぶ' bg={'white'} color={'black'} fontWeight={'bold'} border={'solid 3px purple'} onChange={e=>setInputValue(e.target.value)} mt={-2}>
             {chatTemplateList.map(item=><option key={item.id} value={item.content}>{item.content}</option>)}
         </Select>}
     </VStack>
