@@ -1,25 +1,30 @@
-import { AspectRatio, Avatar, Box, HStack, Stack, StackDivider, Text, VStack } from "@chakra-ui/react";
+import { AspectRatio, Avatar, Box, Button, HStack, Stack, StackDivider, Text, VStack } from "@chakra-ui/react";
 import useChatLogList from "../../../hook/aws/useChatLogList";
 import useAgoraChannel from "../../../hook/agora/useAgoraChannel";
 import { AgoraVideoPlayer } from "agora-rtc-react";
 import WatchScreenShareBox from "../../WatchScreenShareBox";
 import extractLocalTimeFromISOString from "../../../function/extractLocalTimeFromISOString";
+import { useState } from "react";
 
 const UID = Math.floor(1000000 + Math.random() * 9000000);
 
 const VerifiedScreen = ({liveId, liveProfile}) => {
     const {client, hasJoined, remoteUserList, screenVideoTrack, isPoorNetworkQuality} = useAgoraChannel({uid: UID, cname: liveProfile?.id});
     const {isReady: isChatLogListReady, ...chatHook} = useChatLogList({liveId, isSub: true});
+    const [isWatching, setIsWatching] = useState(false);
     return(
         <VStack w={'full'} maxW={'700px'}>
-            <HStack w={'full'} spacing={0}>
-                {remoteUserList.map(remote=>(
-                    <AspectRatio key={remote.uid} ratio={9/16} w={'50%'}>
-                        <VideoScreen videoTrack={remote?.videoTrack} />
-                    </AspectRatio>
-                ))}
-                {remoteUserList.length===0&&<Text>※まだ参加者がいません。</Text>}
-            </HStack>
+            {isWatching
+                ?<HStack w={'full'} spacing={0}>
+                    {remoteUserList.map(remote=>(
+                        <AspectRatio key={remote.uid} ratio={9/16} w={'50%'}>
+                            <VideoScreen videoTrack={remote?.videoTrack} />
+                        </AspectRatio>
+                    ))}
+                    {remoteUserList.length===0&&<Text>※まだ参加者がいません。</Text>}
+                </HStack>
+                :<Button onClick={()=>setIsWatching(true)} my={10} colorScheme="pink">スタート</Button>
+            }
             {screenVideoTrack&&<WatchScreenShareBox screenVideoTrack={screenVideoTrack} />}
             <Stack divider={<StackDivider />} w={'full'} maxW={'700px'} border={'1px'} h={'30vh'} overflowY={'scroll'}>
                 {chatHook.chatLogList.map(chatLog=>{
