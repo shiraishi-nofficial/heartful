@@ -1,6 +1,6 @@
 import { Avatar, AvatarBadge, Box, Flex, HStack, Image, Stack, Text } from "@chakra-ui/react";
 
-const ChatMessage = ({message, kind, isOwnMessage, isTheyOnline, iconUrl, time}) => (
+const ChatMessage = ({message, kind, isOwnMessage, isTheyOnline, iconUrl, time, handleDelete}) => (
     <Flex justifyContent={isOwnMessage ? 'flex-end' : 'flex-start'}>
         <Stack maxW="90%" m={2} spacing={0}>
             <HStack flexDirection={isOwnMessage ? 'row-reverse' : 'row'}>
@@ -13,8 +13,9 @@ const ChatMessage = ({message, kind, isOwnMessage, isTheyOnline, iconUrl, time})
                     </Box>
                     :<Image src={message} w={'50%'} />
                 }
-                <Stack justify={'end'} h={'full'}>
+                <Stack justify={'end'} align={'flex-end'} h={'full'} spacing={0}>
                     <Text fontSize={'xs'} >{time}</Text>
+                    {isOwnMessage&&<Text fontSize={'2xs'} fontWeight={'bold'} cursor={'pointer'} onClick={handleDelete}>削除</Text>}
                 </Stack>
             </HStack>
         </Stack>

@@ -36,8 +36,8 @@ type ChatLog
         provider: userPools
         operations: [read, create, update]
       }
-      { allow: private, provider: userPools, operations: [create, read, update] }
-      { allow: public, provider: iam, operations: [create, read, update] }
+      { allow: private, provider: userPools, operations: [create, read, update, delete] }
+      { allow: public, provider: iam, operations: [create, read, update, delete] }
     ]
   ) {
   id: ID

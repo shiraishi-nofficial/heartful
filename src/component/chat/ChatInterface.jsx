@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Box, Flex, VStack, Text, Textarea, HStack, useToast, Image, Heading, Button, Select, Stack } from '@chakra-ui/react';
+import { Box, VStack, Text, Textarea, HStack, useToast, Image, Heading, Button, Select, Stack } from '@chakra-ui/react';
 import ChatMessage from './ChatMessage';
 import * as Images from '../../image/index';
 import extractLocalTimeFromISOString from '../../function/extractLocalTimeFromISOString';
@@ -32,6 +32,12 @@ const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline, d
       setInputValue('');
     }
   };
+
+  const handleDeleteMessage = async(id) => {
+    if (confirm("本当にメッセージを削除しますか？")) {
+      await chatHook.deleteChat(id);
+    }
+  }
 
   const isOwnChatLog = (targetRole) => {
     if(isPerformer){
@@ -88,6 +94,7 @@ const ChatInterface = ({chatHook, isPerformer, performerIconUrl, isTheyOnline, d
                       isOwnMessage={isOwnChatLog(chatLog.role)}
                       isTheyOnline={isTheyOnline}
                       iconUrl={chatLog.role==='performer'&&performerIconUrl}
+                      handleDelete={()=>handleDeleteMessage(chatLog.id)}
                   />
                 ))}
                 <Box ref={messagesEndRef} /> {/* スクロール位置の参照ポイント */}
