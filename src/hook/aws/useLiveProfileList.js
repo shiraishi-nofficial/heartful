@@ -8,7 +8,7 @@ const useLiveProfileList = () => {
     const client = generateClient();
 
     const fetchLiveProfileList = async() => {
-        const res = await client.graphql({query: liveProfilesByType, variables: {type: 'live'}, authMode: 'iam'})
+        const res = await client.graphql({query: liveProfilesByType, variables: {type: 'live', limit: 10000}, authMode: 'iam'})
         let tmpLiveProfileList = res.data.liveProfilesByType.items.reverse();
         setLiveProfileList(tmpLiveProfileList);
         setIsReady(true);

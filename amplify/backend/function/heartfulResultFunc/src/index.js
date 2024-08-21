@@ -20,9 +20,9 @@ const query = /* GraphQL */ `
   query LiveProfilesByType(
     $type: String!
     $starttime: ModelIntKeyConditionInput
-    $sortDirection: ModelSortDirection
+    $sortDirection: ModelSortDirection  = DESC
     $filter: ModelLiveProfileFilterInput
-    $limit: Int
+    $limit: Int = 10000
     $nextToken: String
   ) {
     liveProfilesByType(

@@ -52,9 +52,9 @@ const Watch = () => {
         ?!passCodeError
             ?(<VStack bgImage={`url(${Images.Bg})`} bgSize="cover" bgPosition="center" width="100%" height="100vh" spacing={0}>
                 <CountDownTimer leftSeconds={leftSeconds} isPerformer={IS_PERFORMER} />
-                <VStack w={'full'} bgColor={'purple'}>
+                {liveProfile?.kind!=='video'&&<VStack w={'full'} bgColor={'purple'}>
                     <Heading size={'md'} color={'white'} py={2}>{LiveKindName(liveProfile?.kind)}</Heading>
-                </VStack>
+                </VStack>}
                 <Image src={Images.Obi} mb={5} w={'full'} />
                 {liveProfile.kind==='chat'
                     ?<ChatIndex liveProfile={liveProfile} uid={UID} chatHook={chatHook} isPerformer={IS_PERFORMER} hasStarted={hasStarted} setHasStarted={setHasStarted} isTheyOnline={isTheyOnline} />

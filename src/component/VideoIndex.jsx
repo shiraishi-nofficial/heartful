@@ -116,7 +116,7 @@ const VideoIndex = ({liveProfile, uid, setHasScreenShare, newMsgList, chatHook, 
             {localVideoTrack&&localAudioTrack&&<Progress colorScheme='green' size='sm' value={volume} w={'60%'} maxW={'xs'} />}
             <HStack>
                 {hasJoined&&localVideoTrack&&localAudioTrack&&<StartBtn onClick={handleStart} />}
-                {localVideoTrack&&localAudioTrack&&<Button colorScheme={'purple'} onClick={toggleBackgroundBlurring}>背景ぼかし</Button>}
+                {localVideoTrack&&localAudioTrack&&<Image src={Images.BlurBtn} colorScheme={'purple'} cursor={'pointer'} onClick={toggleBackgroundBlurring} />}
             </HStack>
         </VStack>
 };
