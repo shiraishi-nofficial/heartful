@@ -1,8 +1,8 @@
 import { generateClient } from "aws-amplify/api";
 import { useEffect, useState } from "react";
 import { chatLogsByLive } from "../../graphql/queries";
-import { onCreateChatLog } from "../../graphql/subscriptions";
-import { createChatLog } from "../../graphql/mutations";
+import { onCreateChatLog, onDeleteChatLog } from "../../graphql/subscriptions";
+import { createChatLog, deleteChatLog } from "../../graphql/mutations";
 import { getUrl } from "aws-amplify/storage";
 
 const useChatLogList = ({liveId, role, isSub}) => {
@@ -34,6 +34,10 @@ const useChatLogList = ({liveId, role, isSub}) => {
     const postChat = async({role, content, kind}) => {
         await client.graphql({query: createChatLog, variables: {input: {role, content, kind, type: 'chat', liveId}}, authMode: 'iam'});
     };
+
+    const deleteChat = async(id) => {
+        await client.graphql({query: deleteChatLog, variables: {input: {id}}, authMode: 'iam'});
+    }
 
     useEffect(()=>{
         if(liveId){
@@ -68,11 +72,23 @@ const useChatLogList = ({liveId, role, isSub}) => {
                                     },
                                     error: (error) => console.warn(error)
                                 });
-            return () => {createSub.unsubscribe()}
+            const deleteSub = client
+                                .graphql({query: onDeleteChatLog, variables: {filter: {liveId: {eq: liveId}}}, authMode: 'iam'})
+                                .subscribe({
+                                    next: async({ data }) => {
+                                        let newChatLog = data.onDeleteChatLog;
+                                        setChatLogList(prev=>prev.filter(item=>item.id!==newChatLog.id));
+                                    },
+                                    error: (error) => console.warn(error)
+                                });
+            return () => {
+                createSub.unsubscribe();
+                deleteSub.unsubscribe();
+            }
         }
     }, [isReady, isSub]);
 
-    return {chatLogList, newMsgList, isReady, postChat};
+    return {chatLogList, newMsgList, isReady, postChat, deleteChat};
 };
 
 export default useChatLogList;

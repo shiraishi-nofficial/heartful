@@ -70,7 +70,7 @@
         },
         "heartfulResultFunc": {
           "deploymentBucketName": "amplify-heartful-telperfo-2e46e-deployment",
-          "s3Key": "amplify-builds/heartfulResultFunc-4d4c7a72772b4a34634e-build.zip"
+          "s3Key": "amplify-builds/heartfulResultFunc-675363454e4e79487838-build.zip"
         },
         "heartfulGql": {},
         "heartful989bdff7989bdff7": {}
