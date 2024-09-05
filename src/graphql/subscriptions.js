@@ -250,6 +250,48 @@ export const onDeleteScreenShareDuration = /* GraphQL */ `
     }
   }
 `;
+export const onCreatePatrolDuration = /* GraphQL */ `
+  subscription OnCreatePatrolDuration(
+    $filter: ModelSubscriptionPatrolDurationFilterInput
+  ) {
+    onCreatePatrolDuration(filter: $filter) {
+      id
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdatePatrolDuration = /* GraphQL */ `
+  subscription OnUpdatePatrolDuration(
+    $filter: ModelSubscriptionPatrolDurationFilterInput
+  ) {
+    onUpdatePatrolDuration(filter: $filter) {
+      id
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeletePatrolDuration = /* GraphQL */ `
+  subscription OnDeletePatrolDuration(
+    $filter: ModelSubscriptionPatrolDurationFilterInput
+  ) {
+    onDeletePatrolDuration(filter: $filter) {
+      id
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateChatTemplate = /* GraphQL */ `
   subscription OnCreateChatTemplate(
     $filter: ModelSubscriptionChatTemplateFilterInput

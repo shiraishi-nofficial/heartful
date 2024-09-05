@@ -245,6 +245,38 @@ export const listScreenShareDurations = /* GraphQL */ `
     }
   }
 `;
+export const getPatrolDuration = /* GraphQL */ `
+  query GetPatrolDuration($id: ID!) {
+    getPatrolDuration(id: $id) {
+      id
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listPatrolDurations = /* GraphQL */ `
+  query ListPatrolDurations(
+    $filter: ModelPatrolDurationFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPatrolDurations(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        liveId
+        duration
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getChatTemplate = /* GraphQL */ `
   query GetChatTemplate($id: ID!) {
     getChatTemplate(id: $id) {
