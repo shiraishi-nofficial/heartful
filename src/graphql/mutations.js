@@ -247,6 +247,51 @@ export const deleteScreenShareDuration = /* GraphQL */ `
     }
   }
 `;
+export const createPatrolDuration = /* GraphQL */ `
+  mutation CreatePatrolDuration(
+    $input: CreatePatrolDurationInput!
+    $condition: ModelPatrolDurationConditionInput
+  ) {
+    createPatrolDuration(input: $input, condition: $condition) {
+      id
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updatePatrolDuration = /* GraphQL */ `
+  mutation UpdatePatrolDuration(
+    $input: UpdatePatrolDurationInput!
+    $condition: ModelPatrolDurationConditionInput
+  ) {
+    updatePatrolDuration(input: $input, condition: $condition) {
+      id
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deletePatrolDuration = /* GraphQL */ `
+  mutation DeletePatrolDuration(
+    $input: DeletePatrolDurationInput!
+    $condition: ModelPatrolDurationConditionInput
+  ) {
+    deletePatrolDuration(input: $input, condition: $condition) {
+      id
+      liveId
+      duration
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createChatTemplate = /* GraphQL */ `
   mutation CreateChatTemplate(
     $input: CreateChatTemplateInput!

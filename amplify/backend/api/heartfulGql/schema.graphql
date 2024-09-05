@@ -75,6 +75,20 @@ type ScreenShareDuration
   createdAt: AWSDateTime
 }
 
+type PatrolDuration
+  @model
+  @auth(
+    rules: [
+      { allow: private, provider: userPools, operations: [create, read, update] }
+      { allow: public, provider: iam, operations: [create, read, update] }
+    ]
+  ) {
+  id: ID
+  liveId: ID!
+  duration: Int!
+  createdAt: AWSDateTime
+}
+
 type ChatTemplate
   @model
   @auth(
