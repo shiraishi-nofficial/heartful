@@ -4,7 +4,7 @@ import VirtualBackgroundExtension from "agora-extension-virtual-background";
 import { registerExtensions } from "agora-rtc-sdk-ng/esm";
 
 const useMicrophoneAudioTrack = createMicrophoneAudioTrack();
-const useCameraVideoTrack = createCameraVideoTrack();
+const useCameraVideoTrack = createCameraVideoTrack({encoderConfig: {width: 1280, height: 720, frameRate: 15}});
 
 const useAgoraPublisher = ({client}) => {
     const [hasPublished, setHasPublished] = useState(false);
