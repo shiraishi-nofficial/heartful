@@ -26,7 +26,7 @@ const RtmRole = require('agora-access-token').RtmRole;
 
 exports.handler = async (event) => {
     const {uid=0, username='', cname='', role='', type=''} = JSON.parse(event.body);
-    const appID  = '7d2396c438a444de9251f50f026eef6b';
+    const appID  = '4da41a3609ab42ce8eb19d661935b30f';
     const { Parameters } = await (new aws.SSM())
       .getParameters({
         Names: ["secretName"].map(secretName => process.env[secretName]),
