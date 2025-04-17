@@ -28,7 +28,7 @@
         "createHeartfulAgoraToken": {
           "secretsPathAmplifyAppId": "d316qfukj0xrv7",
           "deploymentBucketName": "amplify-heartful-dev-9c8a7-deployment",
-          "s3Key": "amplify-builds/createHeartfulAgoraToken-3359764f714e58375651-build.zip"
+          "s3Key": "amplify-builds/createHeartfulAgoraToken-5a76514b47685853392b-build.zip"
         },
         "heartfulResultFunc": {
           "deploymentBucketName": "amplify-heartful-dev-9c8a7-deployment",
